@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+._*
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# WordPress
+wp-content/
+*.log
+
+# Node / build tools (if added later)
+node_modules/
+npm-debug.log
+
+# Local environment
+.env
+*.local

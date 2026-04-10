@@ -1,0 +1,43 @@
+name: Build & Release ZIP
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g. 0.1.4-beta) — only used for the release note, not the filename'
+        required: false
+        default: ''
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build translation-tracker.zip
+        run: |
+          cd ..
+          zip -r translation-tracker.zip wp-translation-tracker \
+            --exclude "*.git*" \
+            --exclude "*/.DS_Store" \
+            --exclude "*/.idea/*" \
+            --exclude "*/.vscode/*" \
+            --exclude "*/node_modules/*"
+          mv translation-tracker.zip wp-translation-tracker/translation-tracker.zip
+
+      - name: Upload ZIP as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: translation-tracker
+          path: translation-tracker.zip
+          retention-days: 30
+
+      - name: Attach ZIP to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: translation-tracker.zip
