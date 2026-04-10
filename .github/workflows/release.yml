@@ -20,12 +20,8 @@ jobs:
 
       - name: Build translation-tracker.zip
         run: |
-          mkdir -p /tmp/wp-translation-tracker
-          rsync -a --exclude='.git' --exclude='.DS_Store' --exclude='.idea' \
-            --exclude='.vscode' --exclude='node_modules' \
-            ./ /tmp/wp-translation-tracker/
-          cd /tmp
-          zip -r $GITHUB_WORKSPACE/translation-tracker.zip wp-translation-tracker
+          git archive --format=zip --prefix=wp-translation-tracker/ HEAD \
+            -o translation-tracker.zip
 
       - name: Upload ZIP as workflow artifact
         uses: actions/upload-artifact@v4
