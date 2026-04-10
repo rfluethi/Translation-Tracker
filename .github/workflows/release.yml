@@ -20,13 +20,14 @@ jobs:
 
       - name: Build translation-tracker.zip
         run: |
-          zip -r translation-tracker.zip . \
+          cd ..
+          zip -r translation-tracker.zip wp-translation-tracker \
             --exclude "*.git*" \
-            --exclude ".DS_Store" \
-            --exclude ".idea/*" \
-            --exclude ".vscode/*" \
-            --exclude "node_modules/*" \
-            --exclude "translation-tracker.zip"
+            --exclude "*/.DS_Store" \
+            --exclude "*/.idea/*" \
+            --exclude "*/.vscode/*" \
+            --exclude "*/node_modules/*"
+          mv translation-tracker.zip wp-translation-tracker/translation-tracker.zip
 
       - name: Upload ZIP as workflow artifact
         uses: actions/upload-artifact@v4
