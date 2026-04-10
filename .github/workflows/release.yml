@@ -1,3 +1,4 @@
+cat <<EOF > .github/workflows/release.yml
 name: Build & Release ZIP
 
 on:
@@ -15,22 +16,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build translation-tracker.zip
+      - name: Package Plugin
         run: |
-          zip -r translation-tracker.zip .             --exclude "*.git*"             --exclude ".github/*"             --exclude "*/.DS_Store"             --exclude "*/.idea/*"             --exclude "*/.vscode*"             --exclude "*/node_modules/*"
+          # Erstelle einen temporären Ordner für das Plugin-Paket
+          mkdir -p build/wp-translation-plugin
+          
+          # Kopiere alle Dateien (außer den build-Ordner selbst) in den Paket-Ordner
+          # Wir nutzen rsync oder cp, um alles sauber zu kopieren
+          cp -r . build/wp-translation-plugin
+          
+          # Entferne unnötige Dateien aus dem Paket (wie .git oder den build Ordner)
+          rm -rf build/wp-translation-plugin/build
+          rm -rf build/wp-translation-plugin/.git
+          
+          # Gehe in den build-Ordner und erstelle das ZIP
+          cd build
+          zip -r ../translation-plugin.zip wp-translation-plugin
+          cd ..
 
-      - name: Upload ZIP as workflow artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: translation-tracker
-          path: translation-tracker.zip
-          retention-days: 30
+          name: translation-plugin-zip
+          path: translation-plugin.zip
 
-      - name: Attach ZIP to GitHub Release
-        if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: translation-tracker.zip
+      - name: Release Asset
+        # Dieser Schritt ist optional, falls du die Datei direkt im Release sehen willst
+        run: |
+          echo "Plugin ZIP created successfully."
+EOF
