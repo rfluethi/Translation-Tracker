@@ -23,6 +23,41 @@ add_action( 'plugins_loaded', function () {
 } );
 
 /* -------------------------------------------------------
+ *  Activation / Deactivation
+ * ------------------------------------------------------- */
+
+register_activation_hook( __FILE__, 'tt_activate' );
+register_deactivation_hook( __FILE__, 'tt_deactivate' );
+
+function tt_activate() {
+	if ( ! wp_next_scheduled( 'tt_cron_refresh_course_map' ) ) {
+		wp_schedule_event( time(), 'tt_lwp_interval', 'tt_cron_refresh_course_map' );
+	}
+}
+
+function tt_deactivate() {
+	wp_clear_scheduled_hook( 'tt_cron_refresh_course_map' );
+}
+
+// Register custom cron interval matching the configured cache duration.
+add_filter( 'cron_schedules', function ( $schedules ) {
+	$hours = absint( get_option( 'tt_lwp_cache_hours', 24 ) );
+	$schedules['tt_lwp_interval'] = [
+		'interval' => $hours * HOUR_IN_SECONDS,
+		'display'  => sprintf( 'Every %d hours (Translation Tracker course map)', $hours ),
+	];
+	return $schedules;
+} );
+
+// Cron callback: rebuild the course map in the background.
+add_action( 'tt_cron_refresh_course_map', 'tt_cron_build_course_map' );
+
+function tt_cron_build_course_map() {
+	delete_transient( 'tt_lwp_course_map' );
+	tt_build_course_map();
+}
+
+/* -------------------------------------------------------
  *  Settings
  * ------------------------------------------------------- */
 
@@ -68,7 +103,7 @@ function tt_register_settings() {
 	register_setting( 'tt_settings', 'tt_github_token', [
 		'type'              => 'string',
 		'default'           => '',
-		'sanitize_callback' => 'sanitize_text_field',
+		'sanitize_callback' => 'tt_sanitize_token',
 	] );
 	register_setting( 'tt_settings', 'tt_refresh_hours', [
 		'type'              => 'integer',
@@ -80,6 +115,26 @@ function tt_register_settings() {
 		'default'           => 24,
 		'sanitize_callback' => 'absint',
 	] );
+}
+
+/**
+ * Sanitize the GitHub token: strip whitespace, reject obviously wrong values.
+ */
+function tt_sanitize_token( $value ) {
+	return sanitize_text_field( trim( $value ) );
+}
+
+/**
+ * Return the GitHub token.
+ * Prefers the environment variable TT_GITHUB_TOKEN so the token never has
+ * to be stored in the database at all.
+ */
+function tt_get_token() {
+	$env = getenv( 'TT_GITHUB_TOKEN' );
+	if ( ! empty( $env ) ) {
+		return trim( $env );
+	}
+	return get_option( 'tt_github_token', '' );
 }
 
 function tt_settings_page_html() {
@@ -155,9 +210,15 @@ function tt_settings_page_html() {
 						<input type="password" id="tt_github_token" name="tt_github_token"
 							   value="<?php echo esc_attr( get_option( 'tt_github_token', '' ) ); ?>"
 							   class="regular-text" placeholder="ghp_xxxxxxxxxxxx">
+						<?php if ( getenv( 'TT_GITHUB_TOKEN' ) ) : ?>
+							<p class="description" style="color:#2a7a2a;">
+								<?php esc_html_e( 'Token is provided via environment variable TT_GITHUB_TOKEN — the field above is ignored.', 'translation-tracker' ); ?>
+							</p>
+						<?php endif; ?>
 						<p class="description">
 							<?php esc_html_e( 'Project mode: token with "project" scope (read-only is sufficient).', 'translation-tracker' ); ?><br>
-							<?php esc_html_e( 'REST mode: token with "public_repo" scope (optional, increases rate limit).', 'translation-tracker' ); ?>
+							<?php esc_html_e( 'REST mode: token with "public_repo" scope (optional, increases rate limit).', 'translation-tracker' ); ?><br>
+							<?php esc_html_e( 'Alternatively set the environment variable TT_GITHUB_TOKEN to avoid storing the token in the database.', 'translation-tracker' ); ?>
 							<a href="https://github.com/settings/tokens" target="_blank"><?php esc_html_e( 'Create token', 'translation-tracker' ); ?></a>
 						</p>
 					</td>
@@ -496,17 +557,11 @@ function tt_slug_from_url( $url ) {
 
 /**
  * Build a full reverse-index: lesson_id → [pathway, course, section].
- * Uses sensei-internal/v1/course-structure which is the only reliable public
- * API to map lessons to their course and module (section).
- * Cached as a single transient so the ~35 API calls only happen once per interval.
+ * Makes ~35 HTTP requests to learn.wordpress.org — only called when the
+ * transient is missing. In normal operation this runs via WP-Cron in the
+ * background (see tt_cron_build_course_map).
  */
-function tt_get_course_map() {
-	$cache_key   = 'tt_lwp_course_map';
-	$cached      = get_transient( $cache_key );
-	if ( false !== $cached ) {
-		return $cached;
-	}
-
+function tt_build_course_map() {
 	$map = []; // lesson_id (int) → [ pathway, course, section ]
 	$ua  = [ 'timeout' => 15, 'user-agent' => 'WordPress-Translation-Tracker/' . TT_VERSION ];
 
@@ -522,7 +577,8 @@ function tt_get_course_map() {
 	// 2. All courses
 	$resp = wp_remote_get( 'https://learn.wordpress.org/wp-json/wp/v2/courses?per_page=100&_fields=id,title,learning-pathway&status=publish', $ua );
 	if ( is_wp_error( $resp ) || wp_remote_retrieve_response_code( $resp ) !== 200 ) {
-		set_transient( $cache_key, $map, HOUR_IN_SECONDS );
+		// Store empty map briefly so we don't hammer the API on every request.
+		set_transient( 'tt_lwp_course_map', $map, HOUR_IN_SECONDS );
 		return $map;
 	}
 	$courses = json_decode( wp_remote_retrieve_body( $resp ), true ) ?: [];
@@ -562,8 +618,20 @@ function tt_get_course_map() {
 	}
 
 	$cache_hours = absint( get_option( 'tt_lwp_cache_hours', 24 ) );
-	set_transient( $cache_key, $map, $cache_hours * HOUR_IN_SECONDS );
+	set_transient( 'tt_lwp_course_map', $map, $cache_hours * HOUR_IN_SECONDS );
 	return $map;
+}
+
+/**
+ * Return the cached course map. On a cache miss the map is built synchronously
+ * (first page load only). After that WP-Cron keeps the cache warm in the background.
+ */
+function tt_get_course_map() {
+	$cached = get_transient( 'tt_lwp_course_map' );
+	if ( false !== $cached ) {
+		return $cached;
+	}
+	return tt_build_course_map();
 }
 
 function tt_fetch_lesson_structure( $slug ) {
@@ -788,7 +856,7 @@ function tt_extract_youtube_url( $body ) {
 }
 
 function tt_load_data( $atts ) {
-	$token          = get_option( 'tt_github_token', '' );
+	$token          = tt_get_token();
 	$project_number = isset( $atts['project'] ) ? absint( $atts['project'] ) : absint( get_option( 'tt_project_number', 104 ) );
 
 	if ( $project_number > 0 ) {
@@ -810,19 +878,21 @@ add_action( 'wp_ajax_tt_refresh', 'tt_ajax_refresh' );
 add_action( 'wp_ajax_nopriv_tt_refresh', 'tt_ajax_refresh' );
 
 function tt_ajax_refresh() {
-	$project_number = absint( $_GET['project'] ?? get_option( 'tt_project_number', 104 ) );
-	$token          = get_option( 'tt_github_token', '' );
+	check_ajax_referer( 'tt_refresh_nonce', 'nonce' );
+
+	$token          = tt_get_token();
+	$project_number = absint( get_option( 'tt_project_number', 104 ) );
 
 	if ( $project_number > 0 ) {
-		$org    = sanitize_text_field( $_GET['org'] ?? get_option( 'tt_github_org', 'WordPress' ) );
-		$locale = sanitize_text_field( $_GET['locale'] ?? get_option( 'tt_locale_filter', 'German' ) );
+		$org    = get_option( 'tt_github_org', 'WordPress' );
+		$locale = get_option( 'tt_locale_filter', 'German' );
 		$cache_key = 'tt_proj_' . md5( $org . $project_number . $locale );
 		delete_transient( $cache_key );
 		wp_send_json( tt_fetch_project_issues( $org, $project_number, $locale, $token ) );
 	}
 
-	$repo  = sanitize_text_field( $_GET['repo'] ?? get_option( 'tt_github_repo', 'WordPress/Learn' ) );
-	$label = sanitize_text_field( $_GET['label'] ?? get_option( 'tt_github_label', '[Content] Translation' ) );
+	$repo  = get_option( 'tt_github_repo', 'WordPress/Learn' );
+	$label = get_option( 'tt_github_label', '[Content] Translation' );
 	$cache_key = 'tt_issues_' . md5( $repo . $label );
 	delete_transient( $cache_key );
 	wp_send_json( tt_fetch_issues( $repo, $label, $token ) );
@@ -851,6 +921,7 @@ function tt_shortcode_render( $atts ) {
 		'lessons' => $data['lessons'] ?? [],
 		'error'   => $data['error'] ?? '',
 		'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+		'nonce'   => wp_create_nonce( 'tt_refresh_nonce' ),
 		'project' => absint( $atts['project'] ),
 		'org'     => $atts['org'],
 		'locale'  => $atts['locale'],

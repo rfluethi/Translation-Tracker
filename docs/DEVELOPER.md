@@ -490,15 +490,36 @@ wp transient delete --all
 
 ### 8.3 Token eintragen
 
+**Option A — Umgebungsvariable (empfohlen):**
+
+Den Token als Server-Umgebungsvariable setzen, z. B. in `wp-config.php`:
+
+```php
+putenv( 'TT_GITHUB_TOKEN=ghp_xxxxxxxxxxxx' );
+```
+
+Oder in der Serverkonfiguration (Apache `.htaccess` / Nginx `fastcgi_param`):
+
+```apacheconf
+SetEnv TT_GITHUB_TOKEN ghp_xxxxxxxxxxxx
+```
+
+Das Plugin liest die Variable automatisch — das Feld im Backend bleibt leer.
+
+**Option B — Backend-Feld:**
+
 1. Gehe zu **Settings → Translation Tracker**
 2. Füge den Token ins Feld **GitHub Token** ein
 3. Klicke **Save Settings**
 
 ### 8.4 Sicherheit
 
-- Der Token wird in der WordPress-Datenbank gespeichert (`wp_options`)
-- Er wird **nie** an das Frontend oder an Besucher übermittelt
-- Empfehlung: Minimale Scopes wählen
+- Token via Umgebungsvariable (`TT_GITHUB_TOKEN`) speichern,
+  damit er nicht in der Datenbank liegt
+- Wird ein DB-Token verwendet, liegt er in `wp_options`
+  und ist für WordPress-Admins lesbar
+- Der Token wird **nie** an das Frontend oder Besucher übermittelt
+- Empfehlung: Minimale Scopes wählen (`project` read-only)
 - Bei Verdacht auf Kompromittierung: Token sofort auf GitHub widerrufen
 
 ---
