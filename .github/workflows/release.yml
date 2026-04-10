@@ -18,17 +18,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build translation-tracker.zip
+      - name: Prepare plugin directory
         run: |
-          git archive --format=zip --prefix=wp-translation-tracker/ HEAD \
-            -o translation-tracker.zip
+          git archive --format=tar --prefix=wp-translation-tracker/ HEAD \
+            | tar -xf - -C /tmp
 
       - name: Upload ZIP as workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: translation-tracker
-          path: translation-tracker.zip
+          path: /tmp/wp-translation-tracker
           retention-days: 30
+
+      - name: Build ZIP for release
+        if: github.event_name == 'release'
+        run: |
+          git archive --format=zip --prefix=wp-translation-tracker/ HEAD \
+            -o translation-tracker.zip
 
       - name: Attach ZIP to GitHub Release
         if: github.event_name == 'release'
