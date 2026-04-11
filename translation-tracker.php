@@ -2,10 +2,12 @@
 /**
  * Plugin Name:  Translation Tracker
  * Plugin URI:   https://github.com/orgs/WordPress/projects/104/views/12
- * Description:  Shows the translation progress of learn.wordpress.org as a dashboard. Shortcode: [translation_tracker]
+ * Description:  This plugin reads the status of the translation issues for learn.wordpress.org directly from GitHub and displays the current translation progress for a selected language in a clear table on the website. The relevant information must be defined in the respective translation issue on GitHub.
  * Version:      0.1.4-beta
- * Author:       WordPress DE Translation Team
+ * Author:       WordPress Training Team DACH
+ * Author URI:   https://learn-wp-dach.org/
  * License:      GPL-2.0-or-later
+ * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:  translation-tracker
  * Domain Path:  /languages
  */

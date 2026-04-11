@@ -6,6 +6,16 @@ All notable changes to Translation Tracker are documented here.
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- Added logos and banners.
+
+### Changed
+
+- Optimized `readme.txt` and `translation-tracker.php` to improve the plugin description.
+
 ## [0.1.4-beta] — 2026-04-10
 
 ### Added
