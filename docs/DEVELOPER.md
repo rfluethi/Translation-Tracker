@@ -55,17 +55,15 @@ Die ZIP-Datei heisst immer **`translation-tracker.zip`**.
 ### Manuell (lokal)
 
 ```bash
-cd /pfad/zu/Translation-Tracker-Plugin/Plugin
+cd /pfad/zu/wp-translation-tracker
 
-zip -r translation-tracker.zip wp-translation-tracker \
-  --exclude "*.git*" \
-  --exclude "*/.DS_Store" \
-  --exclude "*/.idea/*" \
-  --exclude "*/.vscode/*"
+git archive --format=zip --prefix=wp-translation-tracker/ HEAD:plugin \
+  -o translation-tracker.zip
 ```
 
-Die Datei wird im `Plugin/`-Verzeichnis erstellt und kann danach direkt
-in WordPress importiert werden.
+Der Befehl archiviert ausschliesslich den Inhalt des `plugin/`-Verzeichnisses.
+Das Ergebnis ist ein sauberer ZIP ohne Entwicklungs-, Dokumentations- oder
+GitHub-Dateien. Die Datei kann danach direkt in WordPress importiert werden.
 
 ### Automatisch via GitHub Actions
 
@@ -558,16 +556,42 @@ msgfmt translation-tracker-de_DE.po -o translation-tracker-de_DE.mo
 ## 10. Dateistruktur
 
 ```
-wp-translation-tracker/
-├── translation-tracker.php     Hauptdatei: Plugin-Header, Settings,
-│                                GitHub API (GraphQL + REST), Shortcode, AJAX
-├── assets/
-│   ├── dashboard.css           Styles (Light Theme, tt-Prefix, Viewport-Breakout)
-│   └── dashboard.js            Frontend-Rendering, Sortierung, Filter
-└── languages/
-    ├── translation-tracker.pot         String-Template
-    ├── translation-tracker-de_DE.po    Deutsche Übersetzung (Quelle)
-    └── translation-tracker-de_DE.mo    Kompilierte Übersetzung
+wp-translation-tracker/          Repository-Root (GitHub)
+│
+├── plugin/                      NUR diese Dateien landen im ZIP
+│   ├── translation-tracker.php  Hauptdatei: Plugin-Header, Settings,
+│   │                             GitHub API (GraphQL + REST), Shortcode, AJAX
+│   ├── readme.txt               WordPress.org Plugin-Verzeichnis Format
+│   ├── assets/
+│   │   ├── dashboard.css        Styles (Light Theme, tt-Prefix, Viewport-Breakout)
+│   │   └── dashboard.js         Frontend-Rendering, Sortierung, Filter
+│   └── languages/
+│       ├── translation-tracker.pot          String-Template
+│       ├── translation-tracker-de_DE.po     Deutsche Übersetzung (Quelle)
+│       └── translation-tracker-de_DE.mo     Kompilierte Übersetzung
+│
+├── wporg-assets/                WP.org SVN-Assets (nicht im ZIP)
+│   ├── banner-1544x500.png
+│   ├── banner-772x250.png
+│   ├── icon-128x128.png
+│   └── icon-256x256.png
+│
+├── docs/                        Dokumentation (nur GitHub)
+│   ├── DEVELOPER.md             Diese Datei – technische Dokumentation
+│   └── USER-GUIDE.md            Anleitung für Endanwender
+│
+├── .github/                     GitHub-Konfiguration
+│   ├── SECURITY.md              Anleitung für vertrauliche Sicherheitsmeldungen
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md        Issue-Template für Fehlerberichte
+│   │   └── feature_request.md   Issue-Template für Feature-Wünsche
+│   └── workflows/
+│       └── release.yml          GitHub Actions: ZIP-Build und Release-Anhang
+│
+├── CHANGELOG.md                 Versionshistorie (nur GitHub)
+├── CONTRIBUTING.md              Anleitung für Beitragende (nur GitHub)
+├── LICENSE                      GPL-2.0-or-later (nur GitHub)
+└── README.md                    GitHub-Projektbeschreibung
 ```
 
 ---

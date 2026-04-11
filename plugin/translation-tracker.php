@@ -1,9 +1,11 @@
 <?php
 /**
  * Plugin Name:  Translation Tracker
- * Plugin URI:   https://github.com/orgs/WordPress/projects/104/views/12
+ * Plugin URI:   https://learn-wp-dach.org/
  * Description:  This plugin reads the status of the translation issues for learn.wordpress.org directly from GitHub and displays the current translation progress for a selected language in a clear table on the website. The relevant information must be defined in the respective translation issue on GitHub.
  * Version:      0.1.4-beta
+ * Requires at least: 5.8
+ * Requires PHP: 8.0
  * Author:       WordPress Training Team DACH
  * Author URI:   https://learn-wp-dach.org/
  * License:      GPL-2.0-or-later
@@ -19,10 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'TT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TT_VERSION', '0.1.4-beta' );
-
-add_action( 'plugins_loaded', function () {
-	load_plugin_textdomain( 'translation-tracker', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-} );
 
 /* -------------------------------------------------------
  *  Activation / Deactivation
@@ -147,6 +145,7 @@ function tt_settings_page_html() {
 	// Handle GitHub cache clear
 	if ( isset( $_POST['tt_clear_cache'] ) && check_admin_referer( 'tt_clear_cache_nonce' ) ) {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional bulk transient deletion; no WP API covers this pattern.
 		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_tt_proj_%' OR option_name LIKE '_transient_timeout_tt_proj_%' OR option_name LIKE '_transient_tt_issues_%' OR option_name LIKE '_transient_timeout_tt_issues_%'" );
 		delete_option( 'tt_last_fetched' );
 		echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Cache cleared. Data will be reloaded on next page view.', 'translation-tracker' ) . '</p></div>';
@@ -155,6 +154,7 @@ function tt_settings_page_html() {
 	// Handle learn.wordpress.org structure cache clear
 	if ( isset( $_POST['tt_clear_lwp_cache'] ) && check_admin_referer( 'tt_clear_lwp_cache_nonce' ) ) {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional bulk transient deletion; no WP API covers this pattern.
 		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_tt_lwp_%' OR option_name LIKE '_transient_timeout_tt_lwp_%'" );
 		echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Course structure cache cleared. Structure will be reloaded on next page view.', 'translation-tracker' ) . '</p></div>';
 	}
@@ -185,6 +185,7 @@ function tt_settings_page_html() {
 							   class="small-text" min="0">
 						<p class="description">
 							<?php
+							/* translators: %s: example GitHub project URL shown as code snippet */
 							printf(
 								esc_html__( 'From the project URL: %s', 'translation-tracker' ),
 								'<code>github.com/orgs/WordPress/projects/<strong>104</strong></code>'
@@ -204,7 +205,6 @@ function tt_settings_page_html() {
 				</tr>
 			</table>
 
-			<h2><?php esc_html_e( 'General', 'translation-tracker' ); ?></h2>
 			<table class="form-table">
 				<tr>
 					<th scope="row"><label for="tt_github_token"><?php esc_html_e( 'GitHub Token', 'translation-tracker' ); ?></label></th>
@@ -218,9 +218,9 @@ function tt_settings_page_html() {
 							</p>
 						<?php endif; ?>
 						<p class="description">
-							<?php esc_html_e( 'Project mode: token with "project" scope (read-only is sufficient).', 'translation-tracker' ); ?><br>
-							<?php esc_html_e( 'REST mode: token with "public_repo" scope (optional, increases rate limit).', 'translation-tracker' ); ?><br>
-							<?php esc_html_e( 'Alternatively set the environment variable TT_GITHUB_TOKEN to avoid storing the token in the database.', 'translation-tracker' ); ?>
+							<?php esc_html_e( 'Project mode (Project Number > 0): token with "project" scope required.', 'translation-tracker' ); ?><br>
+							<?php esc_html_e( 'REST mode (Project Number = 0): token with "public_repo" scope strongly recommended — without a token the GitHub rate limit (60 requests/hour per server IP) is almost always exceeded in practice.', 'translation-tracker' ); ?><br>
+							<?php esc_html_e( 'Recommended: set the environment variable TT_GITHUB_TOKEN on the server to avoid storing the token in the database.', 'translation-tracker' ); ?>
 							<a href="https://github.com/settings/tokens" target="_blank"><?php esc_html_e( 'Create token', 'translation-tracker' ); ?></a>
 						</p>
 					</td>
@@ -233,7 +233,7 @@ function tt_settings_page_html() {
 							$current = absint( get_option( 'tt_refresh_hours', 4 ) );
 							$options = [ 1 => '1h', 2 => '2h', 4 => '4h', 6 => '6h', 12 => '12h', 24 => '24h', 48 => '48h', 72 => '72h' ];
 							foreach ( $options as $val => $label ) {
-								printf( '<option value="%d"%s>%s</option>', $val, selected( $current, $val, false ), esc_html( $label ) );
+								printf( '<option value="%d"%s>%s</option>', absint( $val ), selected( $current, $val, false ), esc_html( $label ) );
 							}
 							?>
 						</select>
@@ -248,7 +248,7 @@ function tt_settings_page_html() {
 							$current = absint( get_option( 'tt_lwp_cache_hours', 24 ) );
 							$options = [ 6 => '6h', 12 => '12h', 24 => '24h', 48 => '48h', 72 => '72h' ];
 							foreach ( $options as $val => $label ) {
-								printf( '<option value="%d"%s>%s</option>', $val, selected( $current, $val, false ), esc_html( $label ) );
+								printf( '<option value="%d"%s>%s</option>', absint( $val ), selected( $current, $val, false ), esc_html( $label ) );
 							}
 							?>
 						</select>
@@ -270,9 +270,10 @@ function tt_settings_page_html() {
 						<strong><?php echo esc_html( $last_fetched ); ?></strong>
 						&mdash;
 						<?php
+						/* translators: %d: number of hours until the next automatic data refresh */
 						printf(
 							esc_html__( 'Next auto-refresh after %d hours from last load.', 'translation-tracker' ),
-							$refresh_hours
+							absint( $refresh_hours )
 						);
 						?>
 					<?php else : ?>
@@ -553,7 +554,7 @@ function tt_slug_from_url( $url ) {
 		return '';
 	}
 	// Extract last path segment: https://learn.wordpress.org/lesson/what-is-wordpress/ → what-is-wordpress
-	$path = rtrim( parse_url( $url, PHP_URL_PATH ), '/' );
+	$path = rtrim( wp_parse_url( $url, PHP_URL_PATH ), '/' );
 	return basename( $path );
 }
 
@@ -942,7 +943,7 @@ function tt_shortcode_render( $atts ) {
 			'status_review'      => __( 'Review', 'translation-tracker' ),
 			'status_wip'         => __( 'In Progress', 'translation-tracker' ),
 			'status_open'        => __( 'Open', 'translation-tracker' ),
-			'status_na'          => '—',
+			'status_na'          => '—', // Intentional Unicode em-dash; not translatable by design.
 			'stat_lessons'       => __( 'Translations', 'translation-tracker' ),
 			'stat_done'          => __( 'Done', 'translation-tracker' ),
 			'stat_wip'           => __( 'In Progress', 'translation-tracker' ),
@@ -972,31 +973,30 @@ function tt_shortcode_render( $atts ) {
 
 		<div class="tt-filters">
 			<input type="text" id="tt-search" class="tt-search"
-				   placeholder="<?php esc_attr_e( 'Search…', 'translation-tracker' ); ?>"
-				   oninput="ttRender()">
-			<button class="tt-filter-btn active" data-filter="all"                   onclick="ttSetFilter('all')"><?php esc_html_e( 'All', 'translation-tracker' ); ?></button>
-			<button class="tt-filter-btn"         data-filter="Looking for Translator" onclick="ttSetFilter('Looking for Translator')"><?php esc_html_e( 'Looking for Translator', 'translation-tracker' ); ?></button>
-			<button class="tt-filter-btn"         data-filter="Awaiting Triage"        onclick="ttSetFilter('Awaiting Triage')"><?php esc_html_e( 'Awaiting Triage', 'translation-tracker' ); ?></button>
-			<button class="tt-filter-btn"         data-filter="Translation in Progress" onclick="ttSetFilter('Translation in Progress')"><?php esc_html_e( 'Translation in Progress', 'translation-tracker' ); ?></button>
-			<button class="tt-filter-btn"         data-filter="Ready for Review"       onclick="ttSetFilter('Ready for Review')"><?php esc_html_e( 'Ready for Review', 'translation-tracker' ); ?></button>
-			<button class="tt-filter-btn"         data-filter="Preparing to Publish"   onclick="ttSetFilter('Preparing to Publish')"><?php esc_html_e( 'Preparing to Publish', 'translation-tracker' ); ?></button>
-			<button class="tt-filter-btn"         data-filter="Published or Closed"    onclick="ttSetFilter('Published or Closed')"><?php esc_html_e( 'Published or Closed', 'translation-tracker' ); ?></button>
+				   placeholder="<?php esc_attr_e( 'Search…', 'translation-tracker' ); ?>">
+			<button class="tt-filter-btn active" data-filter="all"><?php esc_html_e( 'All', 'translation-tracker' ); ?></button>
+			<button class="tt-filter-btn" data-filter="Looking for Translator"><?php esc_html_e( 'Looking for Translator', 'translation-tracker' ); ?></button>
+			<button class="tt-filter-btn" data-filter="Awaiting Triage"><?php esc_html_e( 'Awaiting Triage', 'translation-tracker' ); ?></button>
+			<button class="tt-filter-btn" data-filter="Translation in Progress"><?php esc_html_e( 'Translation in Progress', 'translation-tracker' ); ?></button>
+			<button class="tt-filter-btn" data-filter="Ready for Review"><?php esc_html_e( 'Ready for Review', 'translation-tracker' ); ?></button>
+			<button class="tt-filter-btn" data-filter="Preparing to Publish"><?php esc_html_e( 'Preparing to Publish', 'translation-tracker' ); ?></button>
+			<button class="tt-filter-btn" data-filter="Published or Closed"><?php esc_html_e( 'Published or Closed', 'translation-tracker' ); ?></button>
 		</div>
 
 		<div class="tt-table-wrap">
 			<table class="tt-table">
 				<thead>
 					<tr>
-						<th class="tt-col-lesson tt-sortable" data-sort="title" onclick="ttSort('title')"><?php esc_html_e( 'Original', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
+						<th class="tt-col-lesson tt-sortable" data-sort="title"><?php esc_html_e( 'Original', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
 						<th class="tt-col-lesson"><?php esc_html_e( 'Translation', 'translation-tracker' ); ?></th>
-						<th class="tt-sortable" data-sort="issue_number" onclick="ttSort('issue_number')"><?php esc_html_e( 'Issue', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
-						<th class="tt-status-col tt-sortable" data-sort="thumbnails" onclick="ttSort('thumbnails')"><?php esc_html_e( 'Thumb.', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
-						<th class="tt-status-col tt-sortable" data-sort="text" onclick="ttSort('text')"><?php esc_html_e( 'Text', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
-						<th class="tt-status-col tt-sortable" data-sort="subtitles" onclick="ttSort('subtitles')"><?php esc_html_e( 'Subtitles', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
-						<th class="tt-status-col tt-sortable" data-sort="exercise" onclick="ttSort('exercise')"><?php esc_html_e( 'Exercise', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
-						<th class="tt-status-col tt-sortable" data-sort="quiz" onclick="ttSort('quiz')"><?php esc_html_e( 'Quiz', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
-						<th class="tt-status-col tt-sortable" data-sort="audio" onclick="ttSort('audio')"><?php esc_html_e( 'Audio', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
-						<th class="tt-status-col tt-sortable" data-sort="video" onclick="ttSort('video')"><?php esc_html_e( 'Video', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
+						<th class="tt-sortable" data-sort="issue_number"><?php esc_html_e( 'Issue', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
+						<th class="tt-status-col tt-sortable" data-sort="thumbnails"><?php esc_html_e( 'Thumb.', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
+						<th class="tt-status-col tt-sortable" data-sort="text"><?php esc_html_e( 'Text', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
+						<th class="tt-status-col tt-sortable" data-sort="subtitles"><?php esc_html_e( 'Subtitles', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
+						<th class="tt-status-col tt-sortable" data-sort="exercise"><?php esc_html_e( 'Exercise', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
+						<th class="tt-status-col tt-sortable" data-sort="quiz"><?php esc_html_e( 'Quiz', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
+						<th class="tt-status-col tt-sortable" data-sort="audio"><?php esc_html_e( 'Audio', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
+						<th class="tt-status-col tt-sortable" data-sort="video"><?php esc_html_e( 'Video', 'translation-tracker' ); ?><span class="tt-sort-indicator"></span></th>
 					</tr>
 				</thead>
 				<tbody id="tt-tbody"></tbody>

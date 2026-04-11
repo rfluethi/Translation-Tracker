@@ -2,9 +2,9 @@
 Contributors: learn-wp-dach
 Tags: translation, workflow, dashboard, github, progress
 Requires at least: 5.8
-Tested up to: 6.7
+Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.0
+Stable tag: 0.1.4-beta
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,10 +115,10 @@ Go to your WordPress admin panel → Settings → Translation Tracker.
 
 == Changelog ==
 
-= 1.0.0 =
-* Initial release
+= 0.1.4-beta =
+* Beta release
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-Initial release of Translation Tracker. No upgrade needed.
+= 0.1.4-beta =
+Beta release of Translation Tracker.

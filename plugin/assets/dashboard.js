@@ -33,21 +33,39 @@
     renderLegend();
     updateInfo();
     ttRender();
+
+    // Search — input event on the static search field.
+    var searchEl = document.getElementById('tt-search');
+    if (searchEl) {
+      searchEl.addEventListener('input', function () { ttRender(); });
+    }
+
+    // Single delegated click handler — no inline onclick attributes needed.
+    document.addEventListener('click', function (e) {
+      var filterBtn = e.target.closest('.tt-filter-btn');
+      if (filterBtn) { ttSetFilter(filterBtn.getAttribute('data-filter')); return; }
+
+      var sortTh = e.target.closest('.tt-sortable');
+      if (sortTh) { ttSort(sortTh.getAttribute('data-sort')); return; }
+
+      var groupRow = e.target.closest('[data-toggle]');
+      if (groupRow) { ttToggleGroup(groupRow.getAttribute('data-toggle')); }
+    });
   });
 
   // ---- Filter ----
 
-  window.ttSetFilter = function (f) {
+  function ttSetFilter(f) {
     activeFilter = f;
     document.querySelectorAll('.tt-filter-btn').forEach(function (b) {
       b.classList.toggle('active', b.getAttribute('data-filter') === f);
     });
     ttRender();
-  };
+  }
 
   // ---- Sort ----
 
-  window.ttSort = function (field) {
+  function ttSort(field) {
     if (sortField === field) {
       sortDir = -sortDir;
     } else {
@@ -56,7 +74,7 @@
     }
     updateSortIndicators();
     ttRender();
-  };
+  }
 
   function updateSortIndicators() {
     document.querySelectorAll('.tt-sortable').forEach(function (th) {
@@ -115,7 +133,7 @@
 
   // ---- Collapse/Expand ----
 
-  window.ttToggleGroup = function (id) {
+  function ttToggleGroup(id) {
     groupState[id] = !groupState[id];
     var rows = document.querySelectorAll('[data-group="' + id + '"]');
     rows.forEach(function (r) {
@@ -127,7 +145,7 @@
 
   // ---- Render ----
 
-  window.ttRender = function () {
+  function ttRender() {
     var searchEl = document.getElementById('tt-search');
     var search   = searchEl ? searchEl.value.toLowerCase() : '';
     var tbody    = document.getElementById('tt-tbody');
@@ -283,7 +301,7 @@
       esc(i18n.stat_lessons || 'Translations') + '</span>';
 
     return '<tr class="tt-group-header tt-group-depth-' + depth + '"' + groupAttr +
-      ' data-toggle="' + id + '" onclick="ttToggleGroup(\'' + id + '\')">' +
+      ' data-toggle="' + id + '">' +
       '<td colspan="10"><span class="tt-group-toggle">' + toggleChar + '</span>' +
       escHtml(label) + statsHtml + '</td></tr>';
   }
@@ -367,12 +385,6 @@
 
   function slugify(str) {
     return String(str).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  }
-
-  // project_status is now used for filtering; this helper remains for
-  // potential future use but is no longer wired to the filter buttons.
-  function lessonOverallStatus(lesson) {
-    return lesson.project_status || '';
   }
 
   function personLink(username) {

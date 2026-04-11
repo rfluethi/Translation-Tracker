@@ -20,7 +20,7 @@ jobs:
 
       - name: Prepare plugin directory
         run: |
-          git archive --format=tar --prefix=wp-translation-tracker/ HEAD \
+          git archive --format=tar --prefix=wp-translation-tracker/ HEAD:plugin \
             | tar -xf - -C /tmp
 
       - name: Upload ZIP as workflow artifact
@@ -33,11 +33,11 @@ jobs:
       - name: Build ZIP for release
         if: github.event_name == 'release'
         run: |
-          git archive --format=zip --prefix=wp-translation-tracker/ HEAD \
+          git archive --format=zip --prefix=wp-translation-tracker/ HEAD:plugin \
             -o translation-tracker.zip
 
       - name: Attach ZIP to GitHub Release
         if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2
         with:
           files: translation-tracker.zip

@@ -1,5 +1,7 @@
 # Changelog
 
+<!-- markdownlint-disable MD013 -->
+
 All notable changes to Translation Tracker are documented here.
 
 > **This plugin is currently in beta.** Versions below 1.0.0 are pre-release and may change. The first stable release will be 1.0.0 after thorough testing.
@@ -10,11 +12,32 @@ All notable changes to Translation Tracker are documented here.
 
 ### Added
 
-- Added logos and banners.
+- `CONTRIBUTING.md` with setup instructions, coding standards, and PR process.
+- `.github/SECURITY.md` for private vulnerability reporting.
+- `Requires at least: 5.8` and `Requires PHP: 8.0` in plugin header.
+- `wporg-assets/` folder for WordPress.org banners and icons (not included in plugin ZIP).
 
 ### Changed
 
-- Optimized `readme.txt` and `translation-tracker.php` to improve the plugin description.
+- **Repository restructured:** plugin files moved to `plugin/` subdirectory; WP.org assets to `wporg-assets/`; GitHub-only files remain at repo root. ZIP is now built with `git archive HEAD:plugin`.
+- `readme.txt`: updated `Tested up to` to 6.9 and aligned `Stable tag` with plugin version (`0.1.4-beta`).
+- `README.md`: updated installation instructions, requirements (PHP 8.0), repository structure overview, and documentation references.
+- Settings page: removed redundant "General" section heading.
+- GitHub Token description in settings: clarified that a token is effectively required in both modes.
+- `release.yml`: updated ZIP build to use `HEAD:plugin`; pinned `softprops/action-gh-release` to commit SHA.
+- `translation-tracker.php`: replaced `parse_url()` with `wp_parse_url()`.
+- `DEVELOPER.md`: updated file structure overview and ZIP build instructions.
+
+### Fixed
+
+- Plugin Check errors: missing `translators:` comments, unescaped `$val` / `$refresh_hours` in `printf`, `parse_url` usage.
+- Plugin Check warnings: added `phpcs:ignore` for intentional bulk transient deletions via direct DB query.
+- CSP compatibility: replaced all inline `onclick` / `oninput` event handlers with a single delegated `addEventListener` in `dashboard.js`. Filter buttons, sort headers, group-toggle rows, and the search field no longer require `unsafe-inline` in a Content Security Policy.
+
+### Removed
+
+- Dead function `lessonOverallStatus()` in `dashboard.js` (was never called).
+- Global `window.ttSetFilter`, `window.ttSort`, `window.ttToggleGroup`, `window.ttRender` — all functions are now private to the IIFE.
 
 ## [0.1.4-beta] — 2026-04-10
 

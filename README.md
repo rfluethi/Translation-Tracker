@@ -13,7 +13,7 @@ but supports any locale.
 ## Features
 
 - Shortcode `[translation_tracker]` — embed on any page or post
-- Reads translation status directly from GitHub Issues
+- Reads translation status directly from GitHub Issues or GitHub Project V2
 - Filters by any locale via GitHub Project V2 (`Locale` field)
 - Hierarchical grouping: Learning Pathway → Course → Section
 - Course structure fetched automatically from learn.wordpress.org API
@@ -33,32 +33,40 @@ but supports any locale.
 | | |
 | --- | --- |
 | WordPress | 5.8 or higher |
-| PHP | 7.4 or higher |
-| GitHub Token | Required for Project V2 (`project` scope) |
+| PHP | 8.0 or higher |
+| GitHub Token | Required for Project V2 mode (`project` scope); strongly recommended for REST mode |
 
 ---
 
 ## Installation
 
-### A — Upload ZIP (recommended)
+### A — Download ZIP (recommended)
 
-1. Download or clone this repository
-2. In WordPress: **Plugins → Add New → Upload Plugin**
-3. Select the ZIP and click **Install Now**
-4. Activate the plugin
+```bash
+git clone https://github.com/your-org/wp-translation-tracker.git
+cd wp-translation-tracker
+git archive --format=zip --prefix=wp-translation-tracker/ HEAD:plugin \
+  -o translation-tracker.zip
+```
+
+Then in WordPress: **Plugins → Add New → Upload Plugin**, select the ZIP,
+click **Install Now** and activate.
 
 ### B — Manual via FTP/SFTP
 
-1. Copy the `wp-translation-tracker` folder to `wp-content/plugins/`
-2. Activate under **Plugins** in the WordPress admin
+Copy the contents of the `plugin/` folder to
+`wp-content/plugins/wp-translation-tracker/` and activate under **Plugins**
+in the WordPress admin.
 
 ---
 
 ## Quick Start
 
 1. Go to **Settings → Translation Tracker**
-2. Enter your GitHub Token — needs `project` scope,
-   [create one here](https://github.com/settings/tokens)
+2. Enter your GitHub Token
+   - Project mode (default): needs `project` scope —
+     [create one here](https://github.com/settings/tokens)
+   - REST mode (Project Number = 0): `public_repo` scope, strongly recommended
 3. Set **Project Number** to your project (e.g. `104`) and
    **Locale Filter** to your locale (e.g. `German`)
 4. Save settings
@@ -67,6 +75,9 @@ but supports any locale.
 ```text
 [translation_tracker]
 ```
+
+> **Tip:** Set the `TT_GITHUB_TOKEN` environment variable on your server
+> instead of storing the token in the database.
 
 ---
 
@@ -78,12 +89,27 @@ See the [User Guide](docs/USER-GUIDE.md) for the exact format.
 
 ---
 
+## Repository Structure
+
+```text
+wp-translation-tracker/
+├── plugin/          Plugin files — these are what the ZIP contains
+├── wporg-assets/    WordPress.org banners and icons (not in ZIP)
+├── docs/            Documentation
+└── .github/         GitHub configuration (workflows, templates, security)
+```
+
+---
+
 ## Documentation
 
-| Document | Audience |
+| Document | Description |
 | --- | --- |
-| [User Guide](docs/USER-GUIDE.md) | Translators — how to fill in issues |
-| [Developer Docs](docs/DEVELOPER.md) | Admins & developers — settings, API |
+| [User Guide](docs/USER-GUIDE.md) | How to fill in GitHub issues for the dashboard |
+| [Developer Docs](docs/DEVELOPER.md) | Settings, API details, ZIP build, file structure |
+| [Changelog](CHANGELOG.md) | Version history |
+| [Contributing](CONTRIBUTING.md) | How to contribute — setup, standards, PR process |
+| [Security Policy](.github/SECURITY.md) | How to report vulnerabilities |
 
 ---
 
