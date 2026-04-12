@@ -39,5 +39,7 @@ $wpdb->query(
 	    OR option_name LIKE '_transient_tt_issues_%'
 	    OR option_name LIKE '_transient_timeout_tt_issues_%'
 	    OR option_name LIKE '_transient_tt_lwp_%'
-	    OR option_name LIKE '_transient_timeout_tt_lwp_%'"
+	    OR option_name LIKE '_transient_timeout_tt_lwp_%'
+	    OR option_name LIKE '_transient_tt_sc_%'
+	    OR option_name LIKE '_transient_timeout_tt_sc_%'"
 );

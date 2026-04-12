@@ -147,6 +147,7 @@ function tt_settings_page_html() {
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional bulk transient deletion; no WP API covers this pattern.
 		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_tt_proj_%' OR option_name LIKE '_transient_timeout_tt_proj_%' OR option_name LIKE '_transient_tt_issues_%' OR option_name LIKE '_transient_timeout_tt_issues_%'" );
+		tt_clear_shortcode_cache();
 		delete_option( 'tt_last_fetched' );
 		echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Cache cleared. Data will be reloaded on next page view.', 'training-translation-tracker' ) . '</p></div>';
 	}
@@ -933,6 +934,10 @@ function tt_ajax_refresh() {
 	$token          = tt_get_token();
 	$project_number = absint( get_option( 'tt_project_number', 104 ) );
 
+	// Always clear shortcode-level cache so the updated data is served on the
+	// next regular page load after a successful AJAX refresh.
+	tt_clear_shortcode_cache();
+
 	if ( $project_number > 0 ) {
 		$org    = get_option( 'tt_github_org', 'WordPress' );
 		$locale = get_option( 'tt_locale_filter', 'German' );
@@ -946,6 +951,16 @@ function tt_ajax_refresh() {
 	$cache_key = 'tt_issues_' . md5( $repo . $label );
 	delete_transient( $cache_key );
 	wp_send_json( tt_fetch_issues( $repo, $label, $token ) );
+}
+
+/**
+ * Delete all shortcode-level data transients (tt_sc_*).
+ * Called on AJAX refresh and from the settings page cache-clear button.
+ */
+function tt_clear_shortcode_cache() {
+	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional bulk transient deletion; no WP API covers this pattern.
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_tt_sc_%' OR option_name LIKE '_transient_timeout_tt_sc_%'" );
 }
 
 /* -------------------------------------------------------
@@ -963,7 +978,19 @@ function tt_shortcode_render( $atts ) {
 		'locale'  => get_option( 'tt_locale_filter', 'German' ),
 	], $atts, 'translation_tracker' );
 
-	$data = tt_load_data( $atts );
+	// Shortcode-level cache: avoids deserialising the full lessons array on
+	// every page view when WordPress's own page cache is not active.
+	$sc_key      = 'tt_sc_' . md5( wp_json_encode( $atts ) );
+	$refresh_ttl = absint( get_option( 'tt_refresh_hours', 4 ) ) * HOUR_IN_SECONDS;
+	$data        = get_transient( $sc_key );
+
+	if ( false === $data ) {
+		$data = tt_load_data( $atts );
+		// Only cache successful responses — errors must be retried on the next load.
+		if ( empty( $data['error'] ) ) {
+			set_transient( $sc_key, $data, $refresh_ttl );
+		}
+	}
 
 	$asset_ver = ( defined( 'WP_DEBUG' ) && WP_DEBUG )
 		? filemtime( TT_PLUGIN_DIR . 'assets/dashboard.css' )
