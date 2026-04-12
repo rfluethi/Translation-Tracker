@@ -1,4 +1,4 @@
-# Translation Tracker
+# Training Translation Tracker
 
 > **Beta** — v0.1.4-beta. The first stable release will be 1.0.0
 > after thorough testing.
