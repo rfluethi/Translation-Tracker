@@ -23,6 +23,26 @@ define( 'TT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TT_VERSION', '0.1.4-beta' );
 
 /* -------------------------------------------------------
+ *  Transient key helper
+ * ------------------------------------------------------- */
+
+/**
+ * Return a site-qualified transient key.
+ *
+ * On WordPress Multisite each site gets its own cache bucket by appending
+ * the current blog ID. On single-site installations the key is unchanged.
+ *
+ * @param string $base Base transient key (e.g. 'tt_proj_abc123').
+ * @return string
+ */
+function tt_cache_key( $base ) {
+	if ( is_multisite() ) {
+		return $base . '_' . get_current_blog_id();
+	}
+	return $base;
+}
+
+/* -------------------------------------------------------
  *  Activation / Deactivation
  * ------------------------------------------------------- */
 
@@ -53,7 +73,7 @@ add_filter( 'cron_schedules', function ( $schedules ) {
 add_action( 'tt_cron_refresh_course_map', 'tt_cron_build_course_map' );
 
 function tt_cron_build_course_map() {
-	delete_transient( 'tt_lwp_course_map' );
+	delete_transient( tt_cache_key( 'tt_lwp_course_map' ) );
 	tt_build_course_map();
 }
 
@@ -320,7 +340,7 @@ function tt_fetch_project_issues( $org, $project_number, $locale_filter, $token 
 		return [ 'error' => __( 'A GitHub Token is required for Project mode (GraphQL). Please add one under Settings → Translation Tracker.', 'training-translation-tracker' ) ];
 	}
 
-	$cache_key     = 'tt_proj_' . md5( $org . $project_number . $locale_filter );
+	$cache_key     = tt_cache_key( 'tt_proj_' . md5( $org . $project_number . $locale_filter ) );
 	$refresh_hours = absint( get_option( 'tt_refresh_hours', 4 ) );
 	$cached        = get_transient( $cache_key );
 
@@ -464,7 +484,7 @@ function tt_get_project_field( $item, $field_name_lower ) {
  * ------------------------------------------------------- */
 
 function tt_fetch_issues( $repo, $label, $token = '' ) {
-	$cache_key     = 'tt_issues_' . md5( $repo . $label );
+	$cache_key     = tt_cache_key( 'tt_issues_' . md5( $repo . $label ) );
 	$refresh_hours = absint( get_option( 'tt_refresh_hours', 4 ) );
 	$cached        = get_transient( $cache_key );
 
@@ -588,7 +608,7 @@ function tt_build_course_map() {
 	// 2. All courses
 	$resp = wp_remote_get( 'https://learn.wordpress.org/wp-json/wp/v2/courses?per_page=100&_fields=id,title,learning-pathway&status=publish', $ua );
 	if ( is_wp_error( $resp ) || wp_remote_retrieve_response_code( $resp ) !== 200 ) {
-		set_transient( 'tt_lwp_course_map', $empty, HOUR_IN_SECONDS );
+		set_transient( tt_cache_key( 'tt_lwp_course_map' ), $empty, HOUR_IN_SECONDS );
 		return $empty;
 	}
 	$courses = json_decode( wp_remote_retrieve_body( $resp ), true ) ?: [];
@@ -650,7 +670,7 @@ function tt_build_course_map() {
 
 	$map         = [ 'by_id' => $by_id, 'by_slug' => $by_slug ];
 	$cache_hours = absint( get_option( 'tt_lwp_cache_hours', 24 ) );
-	set_transient( 'tt_lwp_course_map', $map, $cache_hours * HOUR_IN_SECONDS );
+	set_transient( tt_cache_key( 'tt_lwp_course_map' ), $map, $cache_hours * HOUR_IN_SECONDS );
 	return $map;
 }
 
@@ -661,10 +681,10 @@ function tt_build_course_map() {
  * @return array { by_id: array<int, array>, by_slug: array<string, array> }
  */
 function tt_get_course_map() {
-	$cached = get_transient( 'tt_lwp_course_map' );
+	$cached = get_transient( tt_cache_key( 'tt_lwp_course_map' ) );
 	// Handle old transient format (flat id→struct array from before 0.1.5).
 	if ( false !== $cached && ! isset( $cached['by_id'] ) ) {
-		delete_transient( 'tt_lwp_course_map' );
+		delete_transient( tt_cache_key( 'tt_lwp_course_map' ) );
 		$cached = false;
 	}
 	if ( false !== $cached ) {
@@ -694,7 +714,7 @@ function tt_fetch_lesson_structure( $slug ) {
 
 	// Slow path (rare): slug not in map, e.g. lesson added after last map build.
 	// Fall back to a single REST call and cache the result per slug.
-	$cache_key   = 'tt_lwp_' . sanitize_key( $slug );
+	$cache_key   = tt_cache_key( 'tt_lwp_' . sanitize_key( $slug ) );
 	$cache_hours = absint( get_option( 'tt_lwp_cache_hours', 24 ) );
 	$per_slug    = get_transient( $cache_key );
 	if ( false !== $per_slug ) {
@@ -941,14 +961,14 @@ function tt_ajax_refresh() {
 	if ( $project_number > 0 ) {
 		$org    = get_option( 'tt_github_org', 'WordPress' );
 		$locale = get_option( 'tt_locale_filter', 'German' );
-		$cache_key = 'tt_proj_' . md5( $org . $project_number . $locale );
+		$cache_key = tt_cache_key( 'tt_proj_' . md5( $org . $project_number . $locale ) );
 		delete_transient( $cache_key );
 		wp_send_json( tt_fetch_project_issues( $org, $project_number, $locale, $token ) );
 	}
 
 	$repo  = get_option( 'tt_github_repo', 'WordPress/Learn' );
 	$label = get_option( 'tt_github_label', '[Content] Translation' );
-	$cache_key = 'tt_issues_' . md5( $repo . $label );
+	$cache_key = tt_cache_key( 'tt_issues_' . md5( $repo . $label ) );
 	delete_transient( $cache_key );
 	wp_send_json( tt_fetch_issues( $repo, $label, $token ) );
 }
@@ -980,7 +1000,7 @@ function tt_shortcode_render( $atts ) {
 
 	// Shortcode-level cache: avoids deserialising the full lessons array on
 	// every page view when WordPress's own page cache is not active.
-	$sc_key      = 'tt_sc_' . md5( wp_json_encode( $atts ) );
+	$sc_key      = tt_cache_key( 'tt_sc_' . md5( wp_json_encode( $atts ) ) );
 	$refresh_ttl = absint( get_option( 'tt_refresh_hours', 4 ) ) * HOUR_IN_SECONDS;
 	$data        = get_transient( $sc_key );
 
