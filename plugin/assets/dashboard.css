@@ -1,5 +1,5 @@
 /* ==========================================================
-   Translation Tracker – WordPress Theme-Adaptive Light Styles
+   Training Translation Tracker – WordPress Theme-Adaptive Light Styles
    All selectors are prefixed with .tt- to avoid conflicts.
    ========================================================== */
 
@@ -14,8 +14,8 @@ body { overflow-x: hidden; }
   padding-right: calc(50vw - 50% + 1rem);
   box-sizing: border-box;
 
-  --tt-bg: #ffffff;
-  --tt-surface: #f8f9fa;
+  --tt-bg: #ffffff;      /* page/table background — pure white */
+  --tt-surface: #f8f9fa; /* card/button/header background — intentionally slightly off-white */
   --tt-surface-hover: #f0f1f3;
   --tt-border: #e2e4e9;
   --tt-border-light: #d0d3da;
@@ -163,6 +163,35 @@ body { overflow-x: hidden; }
   background: var(--tt-accent-dim);
   border-color: var(--tt-accent);
   color: var(--tt-accent);
+}
+
+.tt-collapse-btn,
+.tt-refresh-btn {
+  margin-left: auto;
+  background: var(--tt-surface);
+  border: 1px solid var(--tt-border);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  color: var(--tt-text-dim);
+  font-family: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tt-collapse-btn + .tt-refresh-btn {
+  margin-left: 0.25rem;
+}
+
+.tt-collapse-btn:hover,
+.tt-refresh-btn:hover {
+  border-color: var(--tt-border-light);
+  color: var(--tt-text);
+}
+
+.tt-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .tt-last-update {

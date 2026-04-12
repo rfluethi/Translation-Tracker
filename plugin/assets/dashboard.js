@@ -47,7 +47,11 @@
       if (sortTh) { ttSort(sortTh.getAttribute('data-sort')); return; }
 
       var groupRow = e.target.closest('[data-toggle]');
-      if (groupRow) { ttToggleGroup(groupRow.getAttribute('data-toggle')); }
+      if (groupRow) { ttToggleGroup(groupRow.getAttribute('data-toggle')); return; }
+
+      if (e.target.closest('#tt-collapse-all')) { ttCollapseAll(); return; }
+
+      if (e.target.closest('#tt-refresh')) { ttRefresh(); }
     });
   });
 
@@ -141,6 +145,74 @@
     var btn = document.querySelector('[data-toggle="' + id + '"] .tt-group-toggle');
     if (btn) btn.textContent = groupState[id] ? '▶' : '▼';
   };
+
+  // ---- Collapse / Expand all ----
+
+  function ttCollapseAll() {
+    var btn = document.getElementById('tt-collapse-all');
+    var allCollapsed = btn && btn.getAttribute('data-state') === 'collapsed';
+
+    document.querySelectorAll('[data-toggle]').forEach(function (row) {
+      var id = row.getAttribute('data-toggle');
+      groupState[id] = !allCollapsed;
+    });
+
+    if (btn) {
+      btn.textContent = allCollapsed
+        ? (i18n.collapse_all || 'Collapse all')
+        : (i18n.expand_all   || 'Expand all');
+      btn.setAttribute('data-state', allCollapsed ? '' : 'collapsed');
+    }
+
+    ttRender();
+  }
+
+  // ---- AJAX Refresh ----
+
+  function ttRefresh() {
+    var btn = document.getElementById('tt-refresh');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = i18n.refreshing || 'Refreshing…';
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', ttData.ajaxUrl, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = i18n.refresh || 'Refresh';
+      }
+      if (xhr.status !== 200) {
+        showError('HTTP ' + xhr.status);
+        return;
+      }
+      var data;
+      try { data = JSON.parse(xhr.responseText); } catch (e) {
+        showError('Invalid response');
+        return;
+      }
+      if (data.error) {
+        showError(data.error);
+        return;
+      }
+      allLessons = data.lessons || [];
+      updateInfo();
+      ttRender();
+    };
+    xhr.onerror = function () {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = i18n.refresh || 'Refresh';
+      }
+      showError('Network error');
+    };
+    xhr.send(
+      'action=tt_refresh' +
+      '&nonce=' + encodeURIComponent(ttData.nonce)
+    );
+  }
 
   // ---- Render ----
 

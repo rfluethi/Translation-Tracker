@@ -920,8 +920,11 @@ function tt_shortcode_render( $atts ) {
 
 	$data = tt_load_data( $atts );
 
-	wp_enqueue_style( 'tt-dashboard', TT_PLUGIN_URL . 'assets/dashboard.css', [], TT_VERSION );
-	wp_enqueue_script( 'tt-dashboard', TT_PLUGIN_URL . 'assets/dashboard.js', [], TT_VERSION, true );
+	$asset_ver = ( defined( 'WP_DEBUG' ) && WP_DEBUG )
+		? filemtime( TT_PLUGIN_DIR . 'assets/dashboard.css' )
+		: TT_VERSION;
+	wp_enqueue_style( 'tt-dashboard', TT_PLUGIN_URL . 'assets/dashboard.css', [], $asset_ver );
+	wp_enqueue_script( 'tt-dashboard', TT_PLUGIN_URL . 'assets/dashboard.js', [], $asset_ver, true );
 	wp_localize_script( 'tt-dashboard', 'ttData', [
 		'lessons' => $data['lessons'] ?? [],
 		'error'   => $data['error'] ?? '',
@@ -965,6 +968,10 @@ function tt_shortcode_render( $atts ) {
 			'sort_desc'          => __( 'Sort descending', 'training-translation-tracker' ),
 			'tv'                 => __( 'WordPress.tv', 'training-translation-tracker' ),
 			'youtube'            => __( 'YouTube', 'training-translation-tracker' ),
+			'refresh'            => __( 'Refresh', 'training-translation-tracker' ),
+			'refreshing'         => __( 'Refreshing…', 'training-translation-tracker' ),
+			'collapse_all'       => __( 'Collapse all', 'training-translation-tracker' ),
+			'expand_all'         => __( 'Expand all', 'training-translation-tracker' ),
 		],
 	] );
 
@@ -983,6 +990,8 @@ function tt_shortcode_render( $atts ) {
 			<button class="tt-filter-btn" data-filter="Ready for Review"><?php esc_html_e( 'Ready for Review', 'training-translation-tracker' ); ?></button>
 			<button class="tt-filter-btn" data-filter="Preparing to Publish"><?php esc_html_e( 'Preparing to Publish', 'training-translation-tracker' ); ?></button>
 			<button class="tt-filter-btn" data-filter="Published or Closed"><?php esc_html_e( 'Published or Closed', 'training-translation-tracker' ); ?></button>
+			<button class="tt-collapse-btn" id="tt-collapse-all"><?php esc_html_e( 'Collapse all', 'training-translation-tracker' ); ?></button>
+			<button class="tt-refresh-btn" id="tt-refresh"><?php esc_html_e( 'Refresh', 'training-translation-tracker' ); ?></button>
 		</div>
 
 		<div class="tt-table-wrap">

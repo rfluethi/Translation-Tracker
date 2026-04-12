@@ -2,7 +2,8 @@
 
 ## Supported Versions
 
-Only the latest released version of Translation Tracker receives security fixes.
+Only the latest released version of Training Translation Tracker receives
+security fixes.
 
 ## Reporting a Vulnerability
 
