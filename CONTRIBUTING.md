@@ -1,24 +1,25 @@
-# Contributing to Translation Tracker
+# Contributing to Training Translation Tracker
 
 Thank you for your interest in contributing!
 
 ## Getting Started
 
 1. Fork the repository and clone it locally.
-2. Symlink or copy the `plugin/` subfolder into your WordPress installation as `wp-content/plugins/wp-translation-tracker`.
-3. Activate the plugin in the WordPress admin and configure it under **Settings → Translation Tracker**.
+2. Symlink or copy the `plugin/` subfolder into your WordPress installation as `wp-content/plugins/training-training-translation-tracker`.
+3. Activate the plugin in the WordPress admin and configure it under **Settings → Training Translation Tracker**.
 
 To build the installable ZIP locally:
 
 ```bash
-git archive --format=zip --prefix=wp-translation-tracker/ HEAD:plugin -o translation-tracker.zip
+git archive --format=zip --prefix=training-training-translation-tracker/ HEAD:plugin -o training-translation-tracker.zip
 ```
 
 ## Coding Standards
 
 - PHP: [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/)
 - JavaScript: [WordPress JavaScript Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/javascript/)
-- All strings must be wrapped in `__()` / `esc_html__()` etc. with the `translation-tracker` text domain.
+- All strings must be wrapped in `__()` / `esc_html__()` etc. with the
+  `training-translation-tracker` text domain.
 
 ## Branch Strategy
 

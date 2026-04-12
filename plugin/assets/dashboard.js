@@ -5,8 +5,6 @@
 (function () {
   'use strict';
 
-  const FIELDS = ['thumbnails', 'text', 'subtitles', 'exercise', 'quiz', 'audio', 'video'];
-
   // Status sort order (lower = better)
   const STATUS_ORDER = { done: 0, review: 1, wip: 2, open: 3, na: 4, '': 5 };
 
@@ -57,6 +55,7 @@
 
   function ttSetFilter(f) {
     activeFilter = f;
+    groupState = {};
     document.querySelectorAll('.tt-filter-btn').forEach(function (b) {
       b.classList.toggle('active', b.getAttribute('data-filter') === f);
     });
@@ -154,8 +153,11 @@
     // Filter lessons
     var filtered = allLessons.filter(function (l) {
       var matchSearch = !search || l.title.toLowerCase().indexOf(search) !== -1 ||
-        (l.en_name && l.en_name.toLowerCase().indexOf(search) !== -1) ||
-        (l.de_name && l.de_name.toLowerCase().indexOf(search) !== -1);
+        (l.en_name   && l.en_name.toLowerCase().indexOf(search)   !== -1) ||
+        (l.de_name   && l.de_name.toLowerCase().indexOf(search)   !== -1) ||
+        (l.pathway   && l.pathway.toLowerCase().indexOf(search)   !== -1) ||
+        (l.course    && l.course.toLowerCase().indexOf(search)    !== -1) ||
+        (l.section   && l.section.toLowerCase().indexOf(search)   !== -1);
       var matchFilter = activeFilter === 'all' ||
         l.project_status === activeFilter;
       return matchSearch && matchFilter;

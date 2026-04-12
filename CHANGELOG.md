@@ -2,7 +2,7 @@
 
 <!-- markdownlint-disable MD013 -->
 
-All notable changes to Translation Tracker are documented here.
+All notable changes to Training Translation Tracker are documented here.
 
 > **This plugin is currently in beta.** Versions below 1.0.0 are pre-release and may change. The first stable release will be 1.0.0 after thorough testing.
 
@@ -13,6 +13,10 @@ All notable changes to Translation Tracker are documented here.
 ### Added
 
 - `CONTRIBUTING.md` with setup instructions, coding standards, and PR process.
+- `uninstall.php`: removes all plugin options and transients when the plugin is deleted.
+- Settings page: section headings **GitHub Project** and **Cache & Refresh** added.
+- Search now also matches `pathway`, `course`, and `section` group labels.
+- Group collapse state (`groupState`) is reset when the status filter changes.
 - `.github/SECURITY.md` for private vulnerability reporting.
 - `Requires at least: 5.8` and `Requires PHP: 8.0` in plugin header.
 - `wporg-assets/` folder for WordPress.org banners and icons (not included in plugin ZIP).
@@ -25,7 +29,7 @@ All notable changes to Translation Tracker are documented here.
 - Settings page: removed redundant "General" section heading.
 - GitHub Token description in settings: clarified that a token is effectively required in both modes.
 - `release.yml`: updated ZIP build to use `HEAD:plugin`; pinned `softprops/action-gh-release` to commit SHA.
-- `translation-tracker.php`: replaced `parse_url()` with `wp_parse_url()`.
+- `training-translation-tracker.php`: replaced `parse_url()` with `wp_parse_url()`.
 - `DEVELOPER.md`: updated file structure overview and ZIP build instructions.
 
 ### Fixed
@@ -38,6 +42,15 @@ All notable changes to Translation Tracker are documented here.
 
 - Dead function `lessonOverallStatus()` in `dashboard.js` (was never called).
 - Global `window.ttSetFilter`, `window.ttSort`, `window.ttToggleGroup`, `window.ttRender` — all functions are now private to the IIFE.
+- Unused `FIELDS` constant in `dashboard.js`.
+
+### Renamed
+
+- Plugin name: **Training Translation Tracker** (was: Translation Tracker).
+- Plugin slug and text domain: `training-translation-tracker` (was: `translation-tracker`).
+  Resolves Plugin Check `textdomain_mismatch` and `trademarked_term` warnings.
+- Main plugin file: `training-translation-tracker.php`.
+- Language files: `training-translation-tracker-de_DE.{po,mo,pot}`.
 
 ## [0.1.4-beta] — 2026-04-10
 
@@ -100,7 +113,7 @@ All notable changes to Translation Tracker are documented here.
 ### Added
 
 - Translation support (`.po` / `.mo`)
-- Settings page under **Settings → Translation Tracker**
+- Settings page under **Settings → Training Translation Tracker**
 - Cache using WordPress Transients
 
 ---

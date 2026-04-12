@@ -1,4 +1,4 @@
-# Translation Tracker – Anleitung für Übersetzer
+# Training Translation Tracker – Anleitung für Übersetzer
 
 Diese Anleitung erklärt, wie du ein GitHub-Issue ausfüllst,
 damit deine Übersetzung korrekt im Dashboard angezeigt wird.
@@ -32,7 +32,7 @@ Jedes Issue hat zwei Teile:
 Füge diesen Block in dein Issue ein (nach dem Abschnitt «# Details»):
 
 ```markdown
-<!-- Translation Tracker: fill in the fields below to display this lesson in the dashboard. -->
+<!-- Training Translation Tracker: fill in the fields below to display this lesson in the dashboard. -->
 
 <!-- Short title of the original content (without "Learn WordPress:" prefix) -->
 <!-- Example: Original title: What is WordPress -->
@@ -150,7 +150,7 @@ geschrieben ist.
 den alten Wert.**
 Das Dashboard wird automatisch nach dem konfigurierten Intervall
 aktualisiert (Standard: 4 Stunden). Der Administrator kann den Cache
-unter **Settings → Translation Tracker → Clear Cache** sofort leeren.
+unter **Settings → Training Translation Tracker → Clear Cache** sofort leeren.
 
 **Der Link zur Übersetzung wird nicht angezeigt.**
 Fülle `Link to translated content` aus, sobald die Übersetzung auf
@@ -178,7 +178,7 @@ https://make.wordpress.org/training/handbook/content-localization/.
 Once translated, please link or upload your translated files in a
 comment on this issue, and request a translation review.
 
-<!-- Translation Tracker: fill in the fields below to display this lesson in the dashboard. -->
+<!-- Training Translation Tracker: fill in the fields below to display this lesson in the dashboard. -->
 
 <!-- Short title of the original content (without "Learn WordPress:" prefix) -->
 - Original title: What is WordPress

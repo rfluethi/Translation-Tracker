@@ -43,10 +43,10 @@ but supports any locale.
 ### A — Download ZIP (recommended)
 
 ```bash
-git clone https://github.com/your-org/wp-translation-tracker.git
-cd wp-translation-tracker
-git archive --format=zip --prefix=wp-translation-tracker/ HEAD:plugin \
-  -o translation-tracker.zip
+git clone https://github.com/your-org/training-translation-tracker.git
+cd training-translation-tracker
+git archive --format=zip --prefix=training-translation-tracker/ HEAD:plugin \
+  -o training-translation-tracker.zip
 ```
 
 Then in WordPress: **Plugins → Add New → Upload Plugin**, select the ZIP,
@@ -55,14 +55,14 @@ click **Install Now** and activate.
 ### B — Manual via FTP/SFTP
 
 Copy the contents of the `plugin/` folder to
-`wp-content/plugins/wp-translation-tracker/` and activate under **Plugins**
+`wp-content/plugins/training-translation-tracker/` and activate under **Plugins**
 in the WordPress admin.
 
 ---
 
 ## Quick Start
 
-1. Go to **Settings → Translation Tracker**
+1. Go to **Settings → Training Translation Tracker**
 2. Enter your GitHub Token
    - Project mode (default): needs `project` scope —
      [create one here](https://github.com/settings/tokens)
@@ -92,7 +92,7 @@ See the [User Guide](docs/USER-GUIDE.md) for the exact format.
 ## Repository Structure
 
 ```text
-wp-translation-tracker/
+training-translation-tracker/
 ├── plugin/          Plugin files — these are what the ZIP contains
 ├── wporg-assets/    WordPress.org banners and icons (not in ZIP)
 ├── docs/            Documentation

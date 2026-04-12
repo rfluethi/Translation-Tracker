@@ -1,4 +1,4 @@
-# Translation Tracker – WordPress Plugin
+# Training Translation Tracker – WordPress Plugin
 
 ## Dokumentation
 
@@ -16,7 +16,7 @@
 4. [Shortcode verwenden](#4-shortcode-verwenden)
 5. [GitHub Issues korrekt befüllen](#5-github-issues-korrekt-befüllen)
    - [5.6 Issue-Vorlage: Vorgegebener Teil](#56-issue-vorlage-vorgegebener-teil-nicht-ändern)
-   - [5.7 Issue-Vorlage: Zusatz für den Translation Tracker](#57-issue-vorlage-zusatz-für-den-translation-tracker)
+   - [5.7 Issue-Vorlage: Zusatz für den Training Translation Tracker](#57-issue-vorlage-zusatz-für-den-training-translation-tracker)
 6. [Funktionsweise im Detail](#6-funktionsweise-im-detail)
 7. [Caching und Auto-Refresh](#7-caching-und-auto-refresh)
 8. [GitHub Token einrichten](#8-github-token-einrichten)
@@ -29,7 +29,7 @@
 
 ## 1. Übersicht
 
-Das Plugin **Translation Tracker** zeigt den Fortschritt von Übersetzungen auf learn.wordpress.org als interaktives Dashboard direkt auf einer WordPress-Seite an.
+Das Plugin **Training Translation Tracker** zeigt den Fortschritt von Übersetzungen auf learn.wordpress.org als interaktives Dashboard direkt auf einer WordPress-Seite an.
 
 **Kernfunktionen:**
 
@@ -50,15 +50,15 @@ Das Plugin **Translation Tracker** zeigt den Fortschritt von Übersetzungen auf 
 
 ## 2. ZIP erstellen
 
-Die ZIP-Datei heisst immer **`translation-tracker.zip`**.
+Die ZIP-Datei heisst immer **`training-translation-tracker.zip`**.
 
 ### Manuell (lokal)
 
 ```bash
-cd /pfad/zu/wp-translation-tracker
+cd /pfad/zu/training-training-translation-tracker
 
-git archive --format=zip --prefix=wp-translation-tracker/ HEAD:plugin \
-  -o translation-tracker.zip
+git archive --format=zip --prefix=training-training-translation-tracker/ HEAD:plugin \
+  -o training-translation-tracker.zip
 ```
 
 Der Befehl archiviert ausschliesslich den Inhalt des `plugin/`-Verzeichnisses.
@@ -68,7 +68,7 @@ GitHub-Dateien. Die Datei kann danach direkt in WordPress importiert werden.
 ### Automatisch via GitHub Actions
 
 Das Repository enthält einen Workflow unter
-`.github/workflows/release.yml`, der `translation-tracker.zip` automatisch
+`.github/workflows/release.yml`, der `training-translation-tracker.zip` automatisch
 baut und bereitstellt:
 
 | Auslöser | Was passiert |
@@ -82,25 +82,25 @@ baut und bereitstellt:
 
 ### Variante A: ZIP-Upload (empfohlen)
 
-1. Erstelle `translation-tracker.zip` (siehe Abschnitt 2)
+1. Erstelle `training-translation-tracker.zip` (siehe Abschnitt 2)
 2. Gehe in WordPress zu **Plugins → Installieren → Plugin hochladen**
 3. Wähle die ZIP-Datei aus und klicke **Jetzt installieren**
 4. Aktiviere das Plugin
 
 ### Variante B: Manuell per FTP/SFTP
 
-1. Lade den Ordner `wp-translation-tracker` nach `wp-content/plugins/` hoch
+1. Lade den Ordner `training-training-translation-tracker` nach `wp-content/plugins/` hoch
 2. Aktiviere das Plugin unter **Plugins** im WordPress-Admin
 
 ### Nach der Aktivierung
 
-Das Plugin erscheint unter **Settings → Translation Tracker** im Admin-Menü.
+Das Plugin erscheint unter **Settings → Training Translation Tracker** im Admin-Menü.
 
 ---
 
 ## 3. Konfiguration
 
-Die Einstellungsseite findest du unter **Settings → Translation Tracker**.
+Die Einstellungsseite findest du unter **Settings → Training Translation Tracker**.
 
 ### 3.1 GitHub Project V2 – Locale Filter (empfohlen)
 
@@ -306,12 +306,12 @@ Example: Greek translation for Lesson Plan "Introduction To Common Plugins"
 Once translated, please link or upload your translated files in a comment on this issue, and request a [translation review](https://make.wordpress.org/training/handbook/content-localization/#translation-review).
 ```
 
-### 5.7 Issue-Vorlage: Zusatz für den Translation Tracker
+### 5.7 Issue-Vorlage: Zusatz für den Training Translation Tracker
 
 Die folgenden Abschnitte **ergänzen** die obige Vorlage. Sie werden nach dem Abschnitt «# Details» eingefügt und müssen manuell hinzugefügt werden, damit das Dashboard die Lektion korrekt darstellen kann.
 
 ```markdown
-<!-- Translation Tracker: fill in the fields below to display this lesson in the dashboard. -->
+<!-- Training Translation Tracker: fill in the fields below to display this lesson in the dashboard. -->
 
 <!-- Short title of the original content (without "Learn WordPress:" prefix) -->
 <!-- Example: Original title: What is WordPress -->
@@ -444,7 +444,7 @@ Das Plugin nutzt **WordPress Transients**. Die Daten werden nach dem ersten Lade
 
 ### 7.2 Auto-Refresh Interval
 
-Einstellbar unter **Settings → Translation Tracker → Auto-Refresh Interval**:
+Einstellbar unter **Settings → Training Translation Tracker → Auto-Refresh Interval**:
 
 | Intervall | Empfohlen für |
 | ----------- | --------------- |
@@ -457,7 +457,7 @@ Nach Ablauf des Intervalls werden die Daten beim **nächsten Seitenaufruf** auto
 
 ### 7.3 Cache manuell leeren
 
-Unter **Settings → Translation Tracker → Data Status & Refresh** → Button «Clear Cache & Reload Data».
+Unter **Settings → Training Translation Tracker → Data Status & Refresh** → Button «Clear Cache & Reload Data».
 
 Alternativ per WP-CLI:
 ```bash
@@ -479,7 +479,7 @@ wp transient delete --all
 
 1. Gehe zu [github.com/settings/tokens](https://github.com/settings/tokens)
 2. Klicke **Generate new token (classic)**
-3. Vergib einen Namen, z.B. `Translation Tracker`
+3. Vergib einen Namen, z.B. `Training Translation Tracker`
 4. Wähle folgende Scopes:
    - `read:org` (für GraphQL Organisationszugriff)
    - `project` (für GitHub Projects)
@@ -506,7 +506,7 @@ Das Plugin liest die Variable automatisch — das Feld im Backend bleibt leer.
 
 **Option B — Backend-Feld:**
 
-1. Gehe zu **Settings → Translation Tracker**
+1. Gehe zu **Settings → Training Translation Tracker**
 2. Füge den Token ins Feld **GitHub Token** ein
 3. Klicke **Save Settings**
 
@@ -538,9 +538,9 @@ Die Dateien liegen im Ordner `languages/`:
 
 | Datei | Beschreibung |
 | ------- | -------------- |
-| `translation-tracker.pot` | Template mit allen englischen Strings |
-| `translation-tracker-de_DE.po` | Deutsche Übersetzung (Quelltext) |
-| `translation-tracker-de_DE.mo` | Kompilierte Binärdatei (von WordPress geladen) |
+| `training-translation-tracker.pot` | Template mit allen englischen Strings |
+| `training-translation-tracker-de_DE.po` | Deutsche Übersetzung (Quelltext) |
+| `training-translation-tracker-de_DE.mo` | Kompilierte Binärdatei (von WordPress geladen) |
 
 ### 9.3 .mo-Datei neu kompilieren
 
@@ -548,7 +548,7 @@ Nach Änderungen an der `.po`-Datei:
 
 ```bash
 cd languages/
-msgfmt translation-tracker-de_DE.po -o translation-tracker-de_DE.mo
+msgfmt training-translation-tracker-de_DE.po -o training-translation-tracker-de_DE.mo
 ```
 
 ---
@@ -556,19 +556,19 @@ msgfmt translation-tracker-de_DE.po -o translation-tracker-de_DE.mo
 ## 10. Dateistruktur
 
 ```
-wp-translation-tracker/          Repository-Root (GitHub)
+training-training-translation-tracker/          Repository-Root (GitHub)
 │
 ├── plugin/                      NUR diese Dateien landen im ZIP
-│   ├── translation-tracker.php  Hauptdatei: Plugin-Header, Settings,
+│   ├── training-translation-tracker.php  Hauptdatei: Plugin-Header, Settings,
 │   │                             GitHub API (GraphQL + REST), Shortcode, AJAX
 │   ├── readme.txt               WordPress.org Plugin-Verzeichnis Format
 │   ├── assets/
 │   │   ├── dashboard.css        Styles (Light Theme, tt-Prefix, Viewport-Breakout)
 │   │   └── dashboard.js         Frontend-Rendering, Sortierung, Filter
 │   └── languages/
-│       ├── translation-tracker.pot          String-Template
-│       ├── translation-tracker-de_DE.po     Deutsche Übersetzung (Quelle)
-│       └── translation-tracker-de_DE.mo     Kompilierte Übersetzung
+│       ├── training-translation-tracker.pot          String-Template
+│       ├── training-translation-tracker-de_DE.po     Deutsche Übersetzung (Quelle)
+│       └── training-translation-tracker-de_DE.mo     Kompilierte Übersetzung
 │
 ├── wporg-assets/                WP.org SVN-Assets (nicht im ZIP)
 │   ├── banner-1544x500.png
@@ -717,13 +717,13 @@ ttData = {
 
 ### Dashboard zeigt keine Daten
 
-1. Prüfe unter **Settings → Translation Tracker** ob Org, Projekt-Nummer und Token korrekt sind
+1. Prüfe unter **Settings → Training Translation Tracker** ob Org, Projekt-Nummer und Token korrekt sind
 2. Klicke **«Clear Cache & Reload Data»** um den Cache zu leeren
 3. Öffne die Seite mit dem Shortcode neu
 
 ### "A GitHub Token is required for Project mode"
 
-Der GraphQL-Modus benötigt zwingend einen Token mit `project`-Scope. Token unter **Settings → Translation Tracker → GitHub Token** eintragen.
+Der GraphQL-Modus benötigt zwingend einen Token mit `project`-Scope. Token unter **Settings → Training Translation Tracker → GitHub Token** eintragen.
 
 ### "GraphQL: Could not resolve to a ProjectV2"
 

@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later license.
 msgid ""
 msgstr ""
-"Project-Id-Version: Translation Tracker 1.2.0\n"
+"Project-Id-Version: Training Translation Tracker 0.1.4-beta\n"
 "Report-Msgid-Bugs-To: https://github.com/orgs/WordPress/projects/104\n"
 "POT-Creation-Date: 2025-01-01 00:00+0000\n"
 "MIME-Version: 1.0\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "X-Generator: WP-CLI 2.x\n"
-"X-Domain: translation-tracker\n"
+"X-Domain: training-translation-tracker\n"
 
 #. Plugin Name of the plugin
 msgid "Translation Tracker"
@@ -24,242 +24,242 @@ msgstr ""
 msgid "Shows the translation progress of learn.wordpress.org as a dashboard. Shortcode: [translation_tracker]"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Translation Tracker – Settings"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Cache cleared. Data will be reloaded on next page view."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Mode: GitHub Project V2 (GraphQL)"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Items from the GitHub Project are filtered by Locale. This mode requires a GitHub Token with \"project\" scope."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Mode: GitHub REST API"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Issues are filtered by label from the repository. Enter a project number to switch to Project mode (locale:German)."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "GitHub Project V2 – Locale Filter (recommended)"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Corresponds to the filter \"locale:German\" in the GitHub project view."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "GitHub Organisation"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Project Number"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "From the project URL: %s. Set to 0 to use REST API mode."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Locale Filter"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Value of the project field \"Locale\". Corresponds to locale:German in View 12. Leave empty to show all locales."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "GitHub REST API – Label Filter (Fallback)"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Used when project number = 0."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "GitHub Repository"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Issue Label"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "General"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "GitHub Token"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Project mode: token with \"project\" scope (read-only is sufficient)."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "REST mode: token with \"public_repo\" scope (optional, increases rate limit)."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Create token"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Cache (Minutes)"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Save Settings"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Refresh Data"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Clear the cached GitHub data so it is reloaded fresh on the next page view."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Clear Cache & Reload Data"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Usage"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Shortcode without parameters (uses above settings):"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Project mode explicit:"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "REST mode explicit:"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "A GitHub Token is required for Project mode (GraphQL). Please add one under Settings → Translation Tracker."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Unknown error"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "English Lesson"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "German Lesson"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Issue"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Thumb."
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Text"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Subtitles"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Exercise"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Quiz"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Audio"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Video"
 msgstr ""
 
-#: translation-tracker.php
+#: training-translation-tracker.php
 msgid "Progress"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "Search lesson…"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "All"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "Done"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "In Progress"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "Open"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "Review"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "Lessons"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "No lessons found."
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "Loaded:"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "closed"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "open"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "no status table"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "issues loaded"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "with status table"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "without table (showing default «open»)"
 msgstr ""
 
-#: translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php (i18n passed to JS)
 msgid "In Review"
 msgstr ""

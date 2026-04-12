@@ -1,4 +1,4 @@
-=== Translation Tracker ===
+=== Training Translation Tracker ===
 Contributors: learn-wp-dach
 Tags: translation, workflow, dashboard, github, progress
 Requires at least: 5.8
@@ -13,7 +13,7 @@ by reading GitHub issue statuses in a clear, filterable table.
 
 == Description ==
 
-**Translation Tracker** connects your WordPress site to GitHub and 
+**Training Translation Tracker** connects your WordPress site to GitHub and 
 displays the current translation progress for learn.wordpress.org 
 content. It reads status tables directly from GitHub Issues and 
 presents them in a clean, responsive table — filtered by language 
@@ -32,7 +32,7 @@ progress publicly on a WordPress page.
 * CSV export of translation data
 * AJAX refresh button — updates data without page reload
 * Adapts to the active WordPress theme (light design)
-* Settings page under Settings → Translation Tracker
+* Settings page under Settings → Training Translation Tracker
 
 **How it works:**
 
@@ -53,15 +53,15 @@ that tracks translations via GitHub Issues.
 **Automatic installation:**
 
 1. Go to Plugins → Add New in your WordPress admin
-2. Search for "Translation Tracker"
+2. Search for "Training Translation Tracker"
 3. Click "Install Now" and then "Activate"
 
 **Manual installation:**
 
 1. Download the plugin ZIP file
-2. Upload the `wp-translation-tracker` folder to `/wp-content/plugins/`
+2. Upload the `training-translation-tracker` folder to `/wp-content/plugins/`
 3. Activate the plugin in the WordPress admin under Plugins
-4. Go to Settings → Translation Tracker to configure the plugin
+4. Go to Settings → Training Translation Tracker to configure the plugin
 5. Add the shortcode `[translation_tracker]` to any page or post
 
 **Required configuration:**
@@ -105,13 +105,13 @@ builders (Elementor, Beaver Builder, etc.).
 
 = Where do I find the Settings page? =
 
-Go to your WordPress admin panel → Settings → Translation Tracker.
+Go to your WordPress admin panel → Settings → Training Translation Tracker.
 
 == Screenshots ==
 
 1. Frontend table view with progress bars, search and filter
 2. CSV export button and AJAX refresh in action
-3. Settings page under Settings → Translation Tracker
+3. Settings page under Settings → Training Translation Tracker
 
 == Changelog ==
 
@@ -121,4 +121,4 @@ Go to your WordPress admin panel → Settings → Translation Tracker.
 == Upgrade Notice ==
 
 = 0.1.4-beta =
-Beta release of Translation Tracker.
+Beta release of Training Translation Tracker.
