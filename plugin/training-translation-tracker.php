@@ -561,14 +561,19 @@ function tt_slug_from_url( $url ) {
 }
 
 /**
- * Build a full reverse-index: lesson_id → [pathway, course, section].
- * Makes ~35 HTTP requests to learn.wordpress.org — only called when the
- * transient is missing. In normal operation this runs via WP-Cron in the
- * background (see tt_cron_build_course_map).
+ * Build a full reverse-index stored as two maps in one transient:
+ *   by_id  : lesson_id (int) → [ pathway, course, section ]
+ *   by_slug : lesson_slug (string) → [ pathway, course, section ]
+ *
+ * The slug index eliminates per-lesson API calls in tt_fetch_lesson_structure().
+ * Only called when the transient is missing. In normal operation this runs via
+ * WP-Cron in the background (see tt_cron_build_course_map).
  */
 function tt_build_course_map() {
-	$map = []; // lesson_id (int) → [ pathway, course, section ]
-	$ua  = [ 'timeout' => 15, 'user-agent' => 'WordPress-Translation-Tracker/' . TT_VERSION ];
+	$by_id   = []; // lesson_id (int) → [ pathway, course, section ]
+	$by_slug = []; // lesson_slug (string) → [ pathway, course, section ]
+	$ua      = [ 'timeout' => 15, 'user-agent' => 'WordPress-Training-Translation-Tracker/' . TT_VERSION ];
+	$empty   = [ 'by_id' => [], 'by_slug' => [] ];
 
 	// 1. Learning-pathway terms
 	$pathways = [];
@@ -582,13 +587,12 @@ function tt_build_course_map() {
 	// 2. All courses
 	$resp = wp_remote_get( 'https://learn.wordpress.org/wp-json/wp/v2/courses?per_page=100&_fields=id,title,learning-pathway&status=publish', $ua );
 	if ( is_wp_error( $resp ) || wp_remote_retrieve_response_code( $resp ) !== 200 ) {
-		// Store empty map briefly so we don't hammer the API on every request.
-		set_transient( 'tt_lwp_course_map', $map, HOUR_IN_SECONDS );
-		return $map;
+		set_transient( 'tt_lwp_course_map', $empty, HOUR_IN_SECONDS );
+		return $empty;
 	}
 	$courses = json_decode( wp_remote_retrieve_body( $resp ), true ) ?: [];
 
-	// 3. Course structure → build reverse map
+	// 3. Course structure → build by_id index
 	foreach ( $courses as $course ) {
 		$course_id    = intval( $course['id'] );
 		$course_name  = wp_strip_all_tags( $course['title']['rendered'] ?? '' );
@@ -605,15 +609,14 @@ function tt_build_course_map() {
 			if ( $item['type'] === 'module' ) {
 				$section = $item['title'] ?? '';
 				foreach ( $item['lessons'] ?? [] as $lesson ) {
-					$map[ intval( $lesson['id'] ) ] = [
+					$by_id[ intval( $lesson['id'] ) ] = [
 						'pathway' => $pathway_name,
 						'course'  => $course_name,
 						'section' => $section,
 					];
 				}
 			} elseif ( $item['type'] === 'lesson' ) {
-				// Lesson directly in course, no section
-				$map[ intval( $item['id'] ) ] = [
+				$by_id[ intval( $item['id'] ) ] = [
 					'pathway' => $pathway_name,
 					'course'  => $course_name,
 					'section' => '',
@@ -622,6 +625,29 @@ function tt_build_course_map() {
 		}
 	}
 
+	// 4. Fetch all lesson slugs and build by_slug index.
+	//    One paginated REST call per 100 lessons — far cheaper than one call per lesson.
+	$page = 1;
+	do {
+		$resp = wp_remote_get(
+			'https://learn.wordpress.org/wp-json/wp/v2/lessons?per_page=100&page=' . $page . '&_fields=id,slug&status=publish',
+			$ua
+		);
+		if ( is_wp_error( $resp ) || wp_remote_retrieve_response_code( $resp ) !== 200 ) {
+			break;
+		}
+		$lesson_page = json_decode( wp_remote_retrieve_body( $resp ), true ) ?: [];
+		foreach ( $lesson_page as $lesson ) {
+			$id   = intval( $lesson['id'] );
+			$slug = $lesson['slug'] ?? '';
+			if ( $slug !== '' && isset( $by_id[ $id ] ) ) {
+				$by_slug[ $slug ] = $by_id[ $id ];
+			}
+		}
+		$page++;
+	} while ( count( $lesson_page ) === 100 && $page <= 20 );
+
+	$map         = [ 'by_id' => $by_id, 'by_slug' => $by_slug ];
 	$cache_hours = absint( get_option( 'tt_lwp_cache_hours', 24 ) );
 	set_transient( 'tt_lwp_course_map', $map, $cache_hours * HOUR_IN_SECONDS );
 	return $map;
@@ -630,33 +656,53 @@ function tt_build_course_map() {
 /**
  * Return the cached course map. On a cache miss the map is built synchronously
  * (first page load only). After that WP-Cron keeps the cache warm in the background.
+ *
+ * @return array { by_id: array<int, array>, by_slug: array<string, array> }
  */
 function tt_get_course_map() {
 	$cached = get_transient( 'tt_lwp_course_map' );
+	// Handle old transient format (flat id→struct array from before 0.1.5).
+	if ( false !== $cached && ! isset( $cached['by_id'] ) ) {
+		delete_transient( 'tt_lwp_course_map' );
+		$cached = false;
+	}
 	if ( false !== $cached ) {
 		return $cached;
 	}
 	return tt_build_course_map();
 }
 
+/**
+ * Return the pathway/course/section for a lesson identified by its URL slug.
+ *
+ * Uses the by_slug index built into the course map — no per-lesson API call
+ * is made as long as the map transient is warm.
+ */
 function tt_fetch_lesson_structure( $slug ) {
 	if ( empty( $slug ) ) {
 		return [ 'pathway' => '', 'course' => '', 'section' => '' ];
 	}
 
-	$cache_key   = 'tt_lwp_' . sanitize_key( $slug );
-	$cache_hours = absint( get_option( 'tt_lwp_cache_hours', 24 ) );
-	$cached      = get_transient( $cache_key );
-	if ( false !== $cached ) {
-		return $cached;
+	$empty = [ 'pathway' => '', 'course' => '', 'section' => '' ];
+	$map   = tt_get_course_map();
+
+	// Fast path: slug already in the map — no HTTP call needed.
+	if ( isset( $map['by_slug'][ $slug ] ) ) {
+		return $map['by_slug'][ $slug ];
 	}
 
-	$empty = [ 'pathway' => '', 'course' => '', 'section' => '' ];
+	// Slow path (rare): slug not in map, e.g. lesson added after last map build.
+	// Fall back to a single REST call and cache the result per slug.
+	$cache_key   = 'tt_lwp_' . sanitize_key( $slug );
+	$cache_hours = absint( get_option( 'tt_lwp_cache_hours', 24 ) );
+	$per_slug    = get_transient( $cache_key );
+	if ( false !== $per_slug ) {
+		return $per_slug;
+	}
 
-	// Resolve slug → lesson ID
 	$resp = wp_remote_get(
 		'https://learn.wordpress.org/wp-json/wp/v2/lessons?slug=' . rawurlencode( $slug ) . '&_fields=id&per_page=1',
-		[ 'timeout' => 15, 'user-agent' => 'WordPress-Translation-Tracker/' . TT_VERSION ]
+		[ 'timeout' => 15, 'user-agent' => 'WordPress-Training-Translation-Tracker/' . TT_VERSION ]
 	);
 	if ( is_wp_error( $resp ) || wp_remote_retrieve_response_code( $resp ) !== 200 ) {
 		set_transient( $cache_key, $empty, HOUR_IN_SECONDS );
@@ -669,8 +715,7 @@ function tt_fetch_lesson_structure( $slug ) {
 	}
 
 	$lesson_id = intval( $lessons[0]['id'] );
-	$map       = tt_get_course_map();
-	$result    = $map[ $lesson_id ] ?? $empty;
+	$result    = $map['by_id'][ $lesson_id ] ?? $empty;
 
 	set_transient( $cache_key, $result, $cache_hours * HOUR_IN_SECONDS );
 	return $result;
