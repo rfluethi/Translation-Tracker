@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version (e.g. 0.1.4-beta) — only used for the release note, not the filename'
+        description: 'Version (e.g. 0.1.5-beta) — only used for the release note, not the filename'
         required: false
         default: ''
   release:

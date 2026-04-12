@@ -2,7 +2,7 @@
 
 ## Dokumentation
 
-**Plugin Version:** 0.1.4-beta  
+**Plugin Version:** 0.1.5-beta  
 **Mindestanforderung:** WordPress 5.8, PHP 8.0  
 **Lizenz:** GPL-2.0-or-later
 

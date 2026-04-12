@@ -4,7 +4,7 @@ Tags: translation, workflow, dashboard, github, progress
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 0.1.4-beta
+Stable tag: 0.1.5-beta
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,10 +121,10 @@ Go to your WordPress admin panel → Settings → Training Translation Tracker.
 
 == Changelog ==
 
-= 0.1.4-beta =
+= 0.1.5-beta =
 * Beta release
 
 == Upgrade Notice ==
 
-= 0.1.4-beta =
+= 0.1.5-beta =
 Beta release of Training Translation Tracker.

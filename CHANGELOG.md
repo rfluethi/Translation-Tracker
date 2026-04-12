@@ -10,6 +10,8 @@ All notable changes to Training Translation Tracker are documented here.
 
 ## [Unreleased]
 
+## [0.1.5-beta] — 2026-04-12
+
 ### Added
 
 - `CONTRIBUTING.md` with setup instructions, coding standards, and PR process.
@@ -20,21 +22,26 @@ All notable changes to Training Translation Tracker are documented here.
 - `.github/SECURITY.md` for private vulnerability reporting.
 - `Requires at least: 5.8` and `Requires PHP: 8.0` in plugin header.
 - `wporg-assets/` folder for WordPress.org banners and icons (not included in plugin ZIP).
+- `USER-GUIDE.md`: new section explaining filter button labels (GitHub Project status values, intentionally in English).
+- `USER-GUIDE.md`: new FAQ entry explaining when and how to clear the Course Structure Cache.
 
 ### Changed
 
 - **Repository restructured:** plugin files moved to `plugin/` subdirectory; WP.org assets to `wporg-assets/`; GitHub-only files remain at repo root. ZIP is now built with `git archive HEAD:plugin`.
-- `readme.txt`: updated `Tested up to` to 6.9 and aligned `Stable tag` with plugin version (`0.1.4-beta`).
+- `readme.txt`: aligned with `README.md` — updated description to mention GitHub Project V2, expanded feature list, removed non-existent CSV export, updated screenshots.
 - `README.md`: updated installation instructions, requirements (PHP 8.0), repository structure overview, and documentation references.
 - Settings page: removed redundant "General" section heading.
 - GitHub Token description in settings: clarified that a token is effectively required in both modes.
-- `release.yml`: updated ZIP build to use `HEAD:plugin`; pinned `softprops/action-gh-release` to commit SHA.
+- `release.yml`: updated ZIP build to use `HEAD:plugin`; pinned `softprops/action-gh-release` to commit SHA; fixed double prefix bug (`training-training-translation-tracker` → `training-translation-tracker`).
+- `CONTRIBUTING.md`: fixed double prefix in plugin folder path and ZIP build command.
+- `DEVELOPER.md`: corrected PHP requirement from 7.4 to 8.0; updated file structure overview and ZIP build instructions.
 - `training-translation-tracker.php`: replaced `parse_url()` with `wp_parse_url()`.
-- `DEVELOPER.md`: updated file structure overview and ZIP build instructions.
+- `.po`/`.mo`/`.pot`: updated to include all new i18n strings (`refresh`, `refreshing`, `collapse_all`, `expand_all`, filter labels, new settings strings); stale entries removed; compiled with `msgfmt`.
 
 ### Fixed
 
-- Plugin Check errors: missing `translators:` comments, unescaped `$val` / `$refresh_hours` in `printf`, `parse_url` usage.
+- Plugin Check errors: `translators:` comments moved directly above `esc_html__()` calls inside `printf()` (lines 212 and 298).
+- Plugin Check errors: unescaped `$val` / `$refresh_hours` in `printf`, `parse_url` usage.
 - Plugin Check warnings: added `phpcs:ignore` for intentional bulk transient deletions via direct DB query.
 - CSP compatibility: replaced all inline `onclick` / `oninput` event handlers with a single delegated `addEventListener` in `dashboard.js`. Filter buttons, sort headers, group-toggle rows, and the search field no longer require `unsafe-inline` in a Content Security Policy.
 

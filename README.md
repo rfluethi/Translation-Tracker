@@ -1,6 +1,6 @@
 # Training Translation Tracker
 
-> **Beta** — v0.1.4-beta. The first stable release will be 1.0.0
+> **Beta** — v0.1.5-beta. The first stable release will be 1.0.0
 > after thorough testing.
 
 A WordPress plugin that displays translation progress of

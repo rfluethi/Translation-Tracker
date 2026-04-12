@@ -3,7 +3,7 @@
  * Plugin Name:  Training Translation Tracker
  * Plugin URI:   https://learn-wp-dach.org/
  * Description:  This plugin reads the status of the translation issues for learn.wordpress.org directly from GitHub and displays the current translation progress for a selected language in a clear table on the website. The relevant information must be defined in the respective translation issue on GitHub.
- * Version:      0.1.4-beta
+ * Version:      0.1.5-beta
  * Requires at least: 5.8
  * Requires PHP: 8.0
  * Author:       WordPress Training Team DACH
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'TT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'TT_VERSION', '0.1.4-beta' );
+define( 'TT_VERSION', '0.1.5-beta' );
 
 /* -------------------------------------------------------
  *  Transient key helper
