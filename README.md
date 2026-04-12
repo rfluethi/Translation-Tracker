@@ -105,8 +105,8 @@ training-translation-tracker/
 
 | Document | Description |
 | --- | --- |
-| [User Guide](docs/USER-GUIDE.md) | How to fill in GitHub issues for the dashboard |
-| [Developer Docs](docs/DEVELOPER.md) | Settings, API details, ZIP build, file structure |
+| [User Guide](docs/USER-GUIDE.md) | How to fill in GitHub issues for the dashboard *(German)* |
+| [Developer Docs](docs/DEVELOPER.md) | Settings, API details, ZIP build, file structure *(German)* |
 | [Changelog](CHANGELOG.md) | Version history |
 | [Contributing](CONTRIBUTING.md) | How to contribute — setup, standards, PR process |
 | [Security Policy](.github/SECURITY.md) | How to report vulnerabilities |
