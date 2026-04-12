@@ -3,7 +3,7 @@
 ## Dokumentation
 
 **Plugin Version:** 0.1.4-beta  
-**Mindestanforderung:** WordPress 5.8, PHP 7.4  
+**Mindestanforderung:** WordPress 5.8, PHP 8.0  
 **Lizenz:** GPL-2.0-or-later
 
 ---
@@ -55,10 +55,10 @@ Die ZIP-Datei heisst immer **`training-translation-tracker.zip`**.
 ### Manuell (lokal)
 
 ```bash
-cd /pfad/zu/training-training-translation-tracker
+cd /pfad/zu/training-translation-tracker
 
-git archive --format=zip --prefix=training-training-translation-tracker/ HEAD:plugin \
-  -o training-translation-tracker.zip
+git archive --format=zip --prefix=training-translation-tracker/ HEAD:plugin \
+  -o ../training-translation-tracker.zip
 ```
 
 Der Befehl archiviert ausschliesslich den Inhalt des `plugin/`-Verzeichnisses.

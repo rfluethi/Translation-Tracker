@@ -207,8 +207,8 @@ function tt_settings_page_html() {
 							   class="small-text" min="0">
 						<p class="description">
 							<?php
-							/* translators: %s: example GitHub project URL shown as code snippet */
 							printf(
+								/* translators: %s: example GitHub project URL shown as code snippet */
 								esc_html__( 'From the project URL: %s', 'training-translation-tracker' ),
 								'<code>github.com/orgs/WordPress/projects/<strong>104</strong></code>'
 							);
@@ -293,8 +293,8 @@ function tt_settings_page_html() {
 						<strong><?php echo esc_html( $last_fetched ); ?></strong>
 						&mdash;
 						<?php
-						/* translators: %d: number of hours until the next automatic data refresh */
 						printf(
+							/* translators: %d: number of hours until the next automatic data refresh */
 							esc_html__( 'Next auto-refresh after %d hours from last load.', 'training-translation-tracker' ),
 							absint( $refresh_hours )
 						);

@@ -136,6 +136,27 @@ Die Tabelle zeigt den Fortschritt pro Komponente.
 
 ---
 
+## Filterbuttons im Dashboard
+
+Das Dashboard zeigt oberhalb der Tabelle eine Reihe von Filterbuttons,
+mit denen du die Anzeige auf einen bestimmten Status einschränken kannst.
+
+Die Beschriftungen der Buttons – zum Beispiel:
+
+- **Looking for Translator**
+- **Awaiting Triage**
+- **Translation in Progress**
+- **Ready for Review**
+- **Preparing to Publish**
+- **Published or Closed**
+
+– entsprechen exakt den Status-Werten im GitHub Project (V2).
+Sie bleiben bewusst auf Englisch, weil sie direkt aus dem GitHub-Projekt
+übernommen werden und eine manuelle Übersetzung zu Abweichungen führen
+würde, falls sich die Werte im Projekt ändern.
+
+---
+
 ## Häufige Fragen
 
 **Die Übersetzung erscheint unter «Other» statt unter dem Kurs.**
@@ -155,6 +176,15 @@ unter **Settings → Training Translation Tracker → Clear Cache** sofort leere
 **Der Link zur Übersetzung wird nicht angezeigt.**
 Fülle `Link to translated content` aus, sobald die Übersetzung auf
 learn.wordpress.org veröffentlicht ist.
+
+**Eine Lektion erscheint unter «Other» statt unter dem richtigen Lernpfad,
+obwohl der Kurs auf learn.wordpress.org korrekt zugeordnet ist.**
+Das Dashboard lädt die Kursstruktur (Lernpfade, Kurse, Abschnitte) von
+learn.wordpress.org und speichert sie für 24 Stunden im Cache. Wenn
+Kursstrukturen geändert wurden, kann der Administrator den Cache unter
+**Settings → Training Translation Tracker → Clear Course Structure Cache**
+sofort leeren. Danach wird die Struktur beim nächsten Seitenaufruf
+neu abgerufen.
 
 ---
 

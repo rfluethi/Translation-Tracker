@@ -8,38 +8,44 @@ Stable tag: 0.1.4-beta
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Track and display translation progress for learn.wordpress.org 
-by reading GitHub issue statuses in a clear, filterable table.
+Track and display translation progress for learn.wordpress.org
+by reading GitHub issue statuses in a clear, filterable dashboard.
 
 == Description ==
 
-**Training Translation Tracker** connects your WordPress site to GitHub and 
-displays the current translation progress for learn.wordpress.org 
-content. It reads status tables directly from GitHub Issues and 
-presents them in a clean, responsive table — filtered by language 
-and always up to date.
+**Training Translation Tracker** connects your WordPress site to GitHub and
+displays the current translation progress for learn.wordpress.org
+content. It reads translation status directly from GitHub Issues or
+GitHub Project V2 and presents them in a clean, responsive dashboard —
+filtered by locale and always up to date.
 
-This plugin is especially useful for translation teams who manage 
-their workflow via GitHub Issues and want to share the current 
+This plugin is especially useful for translation teams who manage
+their workflow via GitHub Issues and want to share the current
 progress publicly on a WordPress page.
 
 **Features:**
 
 * Shortcode `[translation_tracker]` — insert on any page or post
-* Reads status tables directly from GitHub Issues
-* Server-side caching (configurable cache duration)
-* Filter, search and visual progress bars
-* CSV export of translation data
+* Reads translation status directly from GitHub Issues or GitHub Project V2
+* Hierarchical grouping: Learning Pathway → Course → Section
+* Course structure fetched automatically from learn.wordpress.org API
+* Sortable columns, search, and status filters
+* Collapsible group headers (collapse all / expand all)
+* Creator and reviewer shown as clickable GitHub profile links
+* WordPress.tv and YouTube links per translation
 * AJAX refresh button — updates data without page reload
+* Server-side caching (configurable: 1h – 72h)
+* Full i18n support — ships with English and German
 * Adapts to the active WordPress theme (light design)
 * Settings page under Settings → Training Translation Tracker
 
 **How it works:**
 
-1. Translation status is maintained inside GitHub Issues using a 
+1. Translation status is maintained inside GitHub Issues using a
    defined table format.
-2. The plugin fetches and parses that data via the GitHub API.
-3. Results are displayed on any page using the 
+2. The plugin fetches and parses that data via the GitHub API or
+   GitHub Project V2 (GraphQL).
+3. Results are displayed on any page using the
    `[translation_tracker]` shortcode.
 
 **Use Case:**
@@ -109,8 +115,8 @@ Go to your WordPress admin panel → Settings → Training Translation Tracker.
 
 == Screenshots ==
 
-1. Frontend table view with progress bars, search and filter
-2. CSV export button and AJAX refresh in action
+1. Frontend dashboard with hierarchical grouping, search, and status filters
+2. AJAX refresh button and collapse/expand controls in action
 3. Settings page under Settings → Training Translation Tracker
 
 == Changelog ==

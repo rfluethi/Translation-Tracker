@@ -1,265 +1,337 @@
+# Translation template for Training Translation Tracker.
 # Copyright (C) 2025 WordPress DE Translation Team
 # This file is distributed under the GPL-2.0-or-later license.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Training Translation Tracker 0.1.4-beta\n"
 "Report-Msgid-Bugs-To: https://github.com/orgs/WordPress/projects/104\n"
-"POT-Creation-Date: 2025-01-01 00:00+0000\n"
+"POT-Creation-Date: 2026-04-12 00:00+0000\n"
+"PO-Revision-Date: 2026-04-12 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: WP-CLI 2.x\n"
 "X-Domain: training-translation-tracker\n"
 
-#. Plugin Name of the plugin
+#: training-translation-tracker.php:89 training-translation-tracker.php:90
 msgid "Translation Tracker"
 msgstr ""
 
-#. Description of the plugin
-msgid "Shows the translation progress of learn.wordpress.org as a dashboard. Shortcode: [translation_tracker]"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Translation Tracker – Settings"
-msgstr ""
-
-#: training-translation-tracker.php
+#: training-translation-tracker.php:172
 msgid "Cache cleared. Data will be reloaded on next page view."
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Mode: GitHub Project V2 (GraphQL)"
+#: training-translation-tracker.php:180
+msgid ""
+"Course structure cache cleared. Structure will be reloaded on next page view."
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Items from the GitHub Project are filtered by Locale. This mode requires a GitHub Token with \"project\" scope."
+#: training-translation-tracker.php:187
+msgid "Translation Tracker – Settings"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Mode: GitHub REST API"
+#: training-translation-tracker.php:192
+msgid "GitHub Project"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Issues are filtered by label from the repository. Enter a project number to switch to Project mode (locale:German)."
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "GitHub Project V2 – Locale Filter (recommended)"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Corresponds to the filter \"locale:German\" in the GitHub project view."
-msgstr ""
-
-#: training-translation-tracker.php
+#: training-translation-tracker.php:195
 msgid "GitHub Organisation"
 msgstr ""
 
-#: training-translation-tracker.php
+#: training-translation-tracker.php:203
 msgid "Project Number"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "From the project URL: %s. Set to 0 to use REST API mode."
+#: training-translation-tracker.php:212
+#, php-format
+msgid "From the project URL: %s"
 msgstr ""
 
-#: training-translation-tracker.php
+#: training-translation-tracker.php:220
 msgid "Locale Filter"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Value of the project field \"Locale\". Corresponds to locale:German in View 12. Leave empty to show all locales."
+#: training-translation-tracker.php:225
+msgid "Value of the project field \"Locale\". Leave empty to show all locales."
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "GitHub REST API – Label Filter (Fallback)"
+#: training-translation-tracker.php:230
+msgid "Cache &amp; Refresh"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Used when project number = 0."
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "GitHub Repository"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Issue Label"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "General"
-msgstr ""
-
-#: training-translation-tracker.php
+#: training-translation-tracker.php:233
 msgid "GitHub Token"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Project mode: token with \"project\" scope (read-only is sufficient)."
+#: training-translation-tracker.php:240
+msgid ""
+"Token is provided via environment variable TT_GITHUB_TOKEN — the field above "
+"is ignored."
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "REST mode: token with \"public_repo\" scope (optional, increases rate limit)."
+#: training-translation-tracker.php:244
+msgid ""
+"Project mode (Project Number > 0): token with \"project\" scope required."
 msgstr ""
 
-#: training-translation-tracker.php
+#: training-translation-tracker.php:245
+msgid ""
+"REST mode (Project Number = 0): token with \"public_repo\" scope strongly "
+"recommended — without a token the GitHub rate limit (60 requests/hour per "
+"server IP) is almost always exceeded in practice."
+msgstr ""
+
+#: training-translation-tracker.php:246
+msgid ""
+"Recommended: set the environment variable TT_GITHUB_TOKEN on the server to "
+"avoid storing the token in the database."
+msgstr ""
+
+#: training-translation-tracker.php:247
 msgid "Create token"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Cache (Minutes)"
+#: training-translation-tracker.php:252
+msgid "Auto-Refresh Interval (GitHub)"
 msgstr ""
 
-#: training-translation-tracker.php
+#: training-translation-tracker.php:263
+msgid ""
+"GitHub data is automatically reloaded after this interval on the next page "
+"view."
+msgstr ""
+
+#: training-translation-tracker.php:267
+msgid "Auto-Refresh Interval (Course Structure)"
+msgstr ""
+
+#: training-translation-tracker.php:278
+msgid ""
+"How long course structure data from learn.wordpress.org is cached. Course "
+"structures change rarely – 24h is recommended."
+msgstr ""
+
+#: training-translation-tracker.php:283
 msgid "Save Settings"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Refresh Data"
+#: training-translation-tracker.php:287
+msgid "Data Status & Refresh"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Clear the cached GitHub data so it is reloaded fresh on the next page view."
+#: training-translation-tracker.php:290
+msgid "Last data load"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "Clear Cache & Reload Data"
+#: training-translation-tracker.php:298
+#, php-format
+msgid "Next auto-refresh after %d hours from last load."
 msgstr ""
 
-#: training-translation-tracker.php
+#: training-translation-tracker.php:303
+msgid ""
+"No data loaded yet. Visit the page with the [translation_tracker] shortcode "
+"to load data."
+msgstr ""
+
+#: training-translation-tracker.php:311
+msgid "Clear GitHub Cache"
+msgstr ""
+
+#: training-translation-tracker.php:316
+msgid "Clear Course Structure Cache"
+msgstr ""
+
+#: training-translation-tracker.php:319
+msgid ""
+"GitHub Cache: translation statuses from GitHub issues. Course Structure "
+"Cache: pathway/course/section data from learn.wordpress.org."
+msgstr ""
+
+#: training-translation-tracker.php:323
 msgid "Usage"
 msgstr ""
 
-#: training-translation-tracker.php
+#: training-translation-tracker.php:324
 msgid "Shortcode without parameters (uses above settings):"
 msgstr ""
 
-#: training-translation-tracker.php
+#: training-translation-tracker.php:326
 msgid "Project mode explicit:"
 msgstr ""
 
-#: training-translation-tracker.php
+#: training-translation-tracker.php:328
 msgid "REST mode explicit:"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "A GitHub Token is required for Project mode (GraphQL). Please add one under Settings → Translation Tracker."
+#: training-translation-tracker.php:340
+msgid ""
+"A GitHub Token is required for Project mode (GraphQL). Please add one under "
+"Settings → Translation Tracker."
 msgstr ""
 
-#: training-translation-tracker.php
+#: training-translation-tracker.php:414 training-translation-tracker.php:530
 msgid "Unknown error"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "English Lesson"
+#: training-translation-tracker.php:1032 training-translation-tracker.php:1078
+msgid "Search…"
 msgstr ""
 
-#: training-translation-tracker.php
-msgid "German Lesson"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Issue"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Thumb."
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Text"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Subtitles"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Exercise"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Quiz"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Audio"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Video"
-msgstr ""
-
-#: training-translation-tracker.php
-msgid "Progress"
-msgstr ""
-
-#: training-translation-tracker.php (i18n passed to JS)
-msgid "Search lesson…"
-msgstr ""
-
-#: training-translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php:1033 training-translation-tracker.php:1079
 msgid "All"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php:1034 training-translation-tracker.php:1080
+msgid "Looking for Translator"
+msgstr ""
+
+#: training-translation-tracker.php:1035 training-translation-tracker.php:1081
+msgid "Awaiting Triage"
+msgstr ""
+
+#: training-translation-tracker.php:1036 training-translation-tracker.php:1082
+msgid "Translation in Progress"
+msgstr ""
+
+#: training-translation-tracker.php:1037 training-translation-tracker.php:1083
+msgid "Ready for Review"
+msgstr ""
+
+#: training-translation-tracker.php:1038 training-translation-tracker.php:1084
+msgid "Preparing to Publish"
+msgstr ""
+
+#: training-translation-tracker.php:1039 training-translation-tracker.php:1085
+msgid "Published or Closed"
+msgstr ""
+
+#: training-translation-tracker.php:1040 training-translation-tracker.php:1046
+#: training-translation-tracker.php:1056
 msgid "Done"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
-msgid "In Progress"
-msgstr ""
-
-#: training-translation-tracker.php (i18n passed to JS)
-msgid "Open"
-msgstr ""
-
-#: training-translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php:1041
 msgid "Review"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
-msgid "Lessons"
+#: training-translation-tracker.php:1042 training-translation-tracker.php:1047
+#: training-translation-tracker.php:1058
+msgid "In Progress"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
-msgid "No lessons found."
+#: training-translation-tracker.php:1043 training-translation-tracker.php:1048
+#: training-translation-tracker.php:1059
+msgid "Open"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
-msgid "Loaded:"
+#: training-translation-tracker.php:1045
+msgid "Translations"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php:1049
+msgid "No translations found."
+msgstr ""
+
+#: training-translation-tracker.php:1050
 msgid "closed"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php:1051
 msgid "open"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php:1052
 msgid "no status table"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php:1053
 msgid "issues loaded"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php:1054
 msgid "with status table"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php:1055
 msgid "without table (showing default «open»)"
 msgstr ""
 
-#: training-translation-tracker.php (i18n passed to JS)
+#: training-translation-tracker.php:1057
 msgid "In Review"
+msgstr ""
+
+#: training-translation-tracker.php:1060
+msgid "Sort ascending"
+msgstr ""
+
+#: training-translation-tracker.php:1061
+msgid "Sort descending"
+msgstr ""
+
+#: training-translation-tracker.php:1062
+msgid "WordPress.tv"
+msgstr ""
+
+#: training-translation-tracker.php:1063
+msgid "YouTube"
+msgstr ""
+
+#: training-translation-tracker.php:1064 training-translation-tracker.php:1087
+msgid "Refresh"
+msgstr ""
+
+#: training-translation-tracker.php:1065
+msgid "Refreshing…"
+msgstr ""
+
+#: training-translation-tracker.php:1066 training-translation-tracker.php:1086
+msgid "Collapse all"
+msgstr ""
+
+#: training-translation-tracker.php:1067
+msgid "Expand all"
+msgstr ""
+
+#: training-translation-tracker.php:1094
+msgid "Original"
+msgstr ""
+
+#: training-translation-tracker.php:1095
+msgid "Translation"
+msgstr ""
+
+#: training-translation-tracker.php:1096
+msgid "Issue"
+msgstr ""
+
+#: training-translation-tracker.php:1097
+msgid "Thumb."
+msgstr ""
+
+#: training-translation-tracker.php:1098
+msgid "Text"
+msgstr ""
+
+#: training-translation-tracker.php:1099
+msgid "Subtitles"
+msgstr ""
+
+#: training-translation-tracker.php:1100
+msgid "Exercise"
+msgstr ""
+
+#: training-translation-tracker.php:1101
+msgid "Quiz"
+msgstr ""
+
+#: training-translation-tracker.php:1102
+msgid "Audio"
+msgstr ""
+
+#: training-translation-tracker.php:1103
+msgid "Video"
 msgstr ""

@@ -20,20 +20,20 @@ jobs:
 
       - name: Prepare plugin directory
         run: |
-          git archive --format=tar --prefix=training-training-translation-tracker/ HEAD:plugin \
+          git archive --format=tar --prefix=training-translation-tracker/ HEAD:plugin \
             | tar -xf - -C /tmp
 
       - name: Upload ZIP as workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: training-translation-tracker
-          path: /tmp/training-training-translation-tracker
+          path: /tmp/training-translation-tracker
           retention-days: 30
 
       - name: Build ZIP for release
         if: github.event_name == 'release'
         run: |
-          git archive --format=zip --prefix=training-training-translation-tracker/ HEAD:plugin \
+          git archive --format=zip --prefix=training-translation-tracker/ HEAD:plugin \
             -o training-translation-tracker.zip
 
       - name: Attach ZIP to GitHub Release
