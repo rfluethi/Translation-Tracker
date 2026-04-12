@@ -884,10 +884,11 @@ function tt_extract_lesson_de_url( $body ) {
 	if ( empty( $body ) ) {
 		return '';
 	}
-	if ( preg_match( '/(?:translated content|german lesson|deutsche lektion|übersetzt[ae]? lektion|translation url|de url)[^:]*:\s*(https:\/\/[^\s\n<]+)/i', $body, $m ) ) {
-		return trim( $m[1] );
-	}
-	if ( preg_match( '/(https:\/\/learn\.wordpress\.org\/[^\s\n<]*(?:\/de\/|[?&]lang=de)[^\s\n<]*)/i', $body, $m ) ) {
+	// Only match URLs from an explicit labelled field. A URL-pattern fallback
+	// (e.g. matching /de/ or ?lang=de) was removed because it caused false
+	// positives when issue bodies contained unrelated links to German-language
+	// pages (e.g. wikipedia.org/wiki/de/…).
+	if ( preg_match( '/(?:link to translated content|translated content|german lesson|deutsche lektion|übersetzt[ae]? lektion|translation url|de url)[^:]*:\s*(https:\/\/[^\s\n<]+)/i', $body, $m ) ) {
 		return trim( $m[1] );
 	}
 	return '';
